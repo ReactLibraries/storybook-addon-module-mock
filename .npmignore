@@ -1,0 +1,12 @@
+node_modules
+/src
+.gitignore
+yarn.lock
+tsconfig.json
+jest.config.js
+.eslintrc.json
+.github
+*.log
+/test
+/coverage
+.prettierrc
