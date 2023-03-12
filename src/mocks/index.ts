@@ -1,12 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { jest } from '@storybook/jest';
 import { Mock, moduleMockParameter } from '../types';
 import type { Parameters as P } from '@storybook/react';
 
-export const createMock = <
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  T extends { [key in N]: (...args: any[]) => unknown },
-  N extends keyof T = 'default' extends keyof T ? keyof T : never
->(
+export const createMock: {
+  <
+    T extends { [key in N]: (...args: any[]) => unknown },
+    N extends keyof T = 'default' extends keyof T ? keyof T : never
+  >(
+    module: T,
+    name?: N
+  ): Mock<T, N>;
+  <T extends { [key in 'default']: (...args: any[]) => unknown }>(module: T): Mock<T, 'default'>;
+} = <T extends { [key in N]: (...args: any[]) => unknown }, N extends keyof T>(
   module: T,
   name: N = 'default' as N
 ): Mock<T, N> => {
@@ -27,11 +33,17 @@ export const createMock = <
   return Object.assign(fn, { __module: { module, name } });
 };
 
-export const getMock = <
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  T extends { [key in N]: (...args: any[]) => unknown },
-  N extends keyof T = 'default' extends keyof T ? keyof T : never
->(
+export const getMock: {
+  <T extends { [key in N]: (...args: any[]) => unknown }, N extends keyof T>(
+    parameters: P,
+    module: T,
+    name: N
+  ): Mock<T, N>;
+  <T extends { [key in 'default']: (...args: any[]) => unknown }>(parameters: P, module: T): Mock<
+    T,
+    'default'
+  >;
+} = <T extends { [key in N]: (...args: any[]) => unknown }, N extends keyof T>(
   parameters: P,
   module: T,
   name: N = 'default' as N
