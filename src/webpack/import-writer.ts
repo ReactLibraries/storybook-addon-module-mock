@@ -9,7 +9,6 @@ export class ImportWriterPlugiun {
           `
         if (Object.prototype.toString.call(module.exports) === '[object Module]'){
           module.exports = Object.assign({}, module.exports);
-          __webpack_modules__[moduleId](module, module.exports, __webpack_require__);
         }
         return module.exports;`
         );
