@@ -11,11 +11,19 @@ export const createMock = <
   name: N = 'default' as N
 ): Mock<T, N> => {
   const fn = jest.fn<ReturnType<T[N]>, Parameters<T[N]>>();
-  const f = module[name];
-  module[name] = fn as never;
-  fn.mockRestore = () => {
-    module[name] = f;
-  };
+  if ('$$mock$$' in module) {
+    const mock = (module as unknown as { $$mock$$: (name: N, value: unknown) => unknown }).$$mock$$;
+    const f = mock(name, fn);
+    fn.mockRestore = () => {
+      mock(name, f);
+    };
+  } else {
+    const f = module[name];
+    module[name] = fn as never;
+    fn.mockRestore = () => {
+      module[name] = f;
+    };
+  }
   return Object.assign(fn, { __module: { module, name } });
 };
 

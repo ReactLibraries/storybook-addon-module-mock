@@ -21,7 +21,7 @@ module.exports = {
 };
 ```
 
-### Sample
+### Sample1
 
 #### MockTest.tsx
 
@@ -59,7 +59,7 @@ import { userEvent, waitFor, within } from '@storybook/testing-library';
 import { createMock, getMock } from 'storybook-addon-module-mock';
 import { ComponentMeta, ComponentStoryObj } from '@storybook/react';
 import { MockTest } from './MockTest';
-import * as _react from 'react';
+import React from 'react';
 
 const meta: ComponentMeta<typeof MockTest> = {
   title: 'Components/MockTest',
@@ -78,7 +78,7 @@ export const Mock: ComponentStoryObj<typeof MockTest> = {
   parameters: {
     moduleMock: {
       mock: () => {
-        const mock = createMock(_react, 'useMemo');
+        const mock = createMock(React, 'useMemo');
         mock.mockReturnValue('After');
         return [mock];
       },
@@ -87,7 +87,7 @@ export const Mock: ComponentStoryObj<typeof MockTest> = {
   play: async ({ canvasElement, parameters }) => {
     const canvas = within(canvasElement);
     expect(canvas.getByText('After')).toBeInTheDocument();
-    const mock = getMock(parameters, _react, 'useMemo');
+    const mock = getMock(parameters, React, 'useMemo');
     expect(mock).toBeCalled();
   },
 };
@@ -96,14 +96,110 @@ export const Action: ComponentStoryObj<typeof MockTest> = {
   parameters: {
     moduleMock: {
       mock: () => {
-        const mock = createMock(_react, 'useMemo');
+        const mock = createMock(React, 'useMemo');
         return [mock];
       },
     },
   },
   play: async ({ canvasElement, parameters }) => {
     const canvas = within(canvasElement);
-    const mock = getMock(parameters, _react, 'useMemo');
+    const mock = getMock(parameters, React, 'useMemo');
+    mock.mockReturnValue('Action');
+    userEvent.click(await canvas.findByRole('button'));
+    await waitFor(() => {
+      expect(canvas.getByText('Action')).toBeInTheDocument();
+    });
+  },
+};
+```
+
+### Sample2
+
+#### message.ts
+
+```tsx
+export const getMessage = () => {
+  return 'Before';
+};
+```
+
+#### LibHook.tsx
+
+```tsx
+import React, { FC, useState } from 'react';
+import { getMessage } from './message';
+
+interface Props {}
+
+/**
+ * LibHook
+ *
+ * @param {Props} { }
+ */
+export const LibHook: FC<Props> = ({}) => {
+  const [, reload] = useState({});
+  const value = getMessage();
+  return (
+    <div>
+      <button onClick={() => reload({})}>{value}</button>
+    </div>
+  );
+};
+```
+
+#### LibHook.stories.tsx
+
+```tsx
+import { expect } from '@storybook/jest';
+import { userEvent, waitFor, within } from '@storybook/testing-library';
+import { ComponentMeta, ComponentStoryObj } from '@storybook/react';
+import { LibHook } from './LibHook';
+import { createMock, getMock } from 'storybook-addon-module-mock';
+import * as message from './message';
+
+const meta: ComponentMeta<typeof LibHook> = {
+  title: 'Components/LibHook',
+  component: LibHook,
+};
+export default meta;
+
+export const Primary: ComponentStoryObj<typeof LibHook> = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    expect(canvas.getByText('Before')).toBeInTheDocument();
+  },
+};
+
+export const Mock: ComponentStoryObj<typeof LibHook> = {
+  parameters: {
+    moduleMock: {
+      mock: () => {
+        const mock = createMock(message, 'getMessage');
+        mock.mockReturnValue('After');
+        return [mock];
+      },
+    },
+  },
+  play: async ({ canvasElement, parameters }) => {
+    const canvas = within(canvasElement);
+    expect(canvas.getByText('After')).toBeInTheDocument();
+    const mock = getMock(parameters, message, 'getMessage');
+    expect(mock).toBeCalled();
+  },
+};
+
+export const Action: ComponentStoryObj<typeof LibHook> = {
+  parameters: {
+    moduleMock: {
+      mock: () => {
+        const mock = createMock(message, 'getMessage');
+        return [mock];
+      },
+    },
+  },
+  play: async ({ canvasElement, parameters }) => {
+    const canvas = within(canvasElement);
+    const mock = getMock(parameters, message, 'getMessage');
     mock.mockReturnValue('Action');
     userEvent.click(await canvas.findByRole('button'));
     await waitFor(() => {
