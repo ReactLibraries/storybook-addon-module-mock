@@ -1,6 +1,6 @@
 {
   "name": "storybook-addon-module-mock",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "main": "dist/index.js",
   "license": "MIT",
   "scripts": {
@@ -15,14 +15,24 @@
     "@storybook/react": "^6.5.16",
     "@types/babel__core": "^7.20.0",
     "@types/react": "^18.0.28",
-    "@typescript-eslint/eslint-plugin": "^5.54.0",
-    "@typescript-eslint/parser": "^5.54.0",
-    "eslint": "8.35.0",
-    "eslint-config-prettier": "^8.6.0",
+    "@typescript-eslint/eslint-plugin": "^5.54.1",
+    "@typescript-eslint/parser": "^5.54.1",
+    "eslint": "8.36.0",
+    "eslint-config-prettier": "^8.7.0",
     "eslint-import-resolver-typescript": "^3.5.3",
     "eslint-plugin-import": "^2.27.5",
     "typescript": "^4.9.5"
   },
   "repository": "https://github.com/ReactLibraries/storybook-addon-module-mock",
+  "keywords": [
+    "storybook",
+    "react",
+    "test",
+    "jest",
+    "mock",
+    "module",
+    "import",
+    "interactions"
+  ],
   "author": "SoraKumo <info@croud.jp>"
 }

@@ -6,6 +6,9 @@ Provides module mocking functionality like `jest.mock` on Storybook.
 
 Added 'storybook-addon-module-mock' to Storybook addons.
 
+- Sample code  
+  https://github.com/SoraKumo001/storybook-module-mock
+
 ### .storybook/main.js
 
 ```js
@@ -20,21 +23,10 @@ module.exports = {
 
 ### Sample
 
-#### message.ts
-
-Mock target file.
-
-```tsx
-export const getMessage = () => {
-  return 'Before';
-};
-```
-
 #### MockTest.tsx
 
 ```tsx
-import React, { FC, useState } from 'react';
-import { getMessage } from './message';
+import React, { FC, useMemo, useState } from 'react';
 
 interface Props {}
 
@@ -45,9 +37,12 @@ interface Props {}
  */
 export const MockTest: FC<Props> = ({}) => {
   const [, reload] = useState({});
+  const value = useMemo(() => {
+    return 'Before';
+  }, []);
   return (
     <div>
-      <button onClick={() => reload({})}>{getMessage()}</button>
+      <button onClick={() => reload({})}>{value}</button>
     </div>
   );
 };
@@ -61,11 +56,10 @@ The `mockRestore()` is automatically performed after the Story display is finish
 ```tsx
 import { expect } from '@storybook/jest';
 import { userEvent, waitFor, within } from '@storybook/testing-library';
+import { createMock, getMock } from 'storybook-addon-module-mock';
 import { ComponentMeta, ComponentStoryObj } from '@storybook/react';
 import { MockTest } from './MockTest';
-import { createMock, getMock } from 'storybook-addon-module-mock';
-
-import * as message from './message';
+import * as _react from 'react';
 
 const meta: ComponentMeta<typeof MockTest> = {
   title: 'Components/MockTest',
@@ -84,7 +78,7 @@ export const Mock: ComponentStoryObj<typeof MockTest> = {
   parameters: {
     moduleMock: {
       mock: () => {
-        const mock = createMock(message, 'getMessage');
+        const mock = createMock(_react, 'useMemo');
         mock.mockReturnValue('After');
         return [mock];
       },
@@ -93,7 +87,7 @@ export const Mock: ComponentStoryObj<typeof MockTest> = {
   play: async ({ canvasElement, parameters }) => {
     const canvas = within(canvasElement);
     expect(canvas.getByText('After')).toBeInTheDocument();
-    const mock = getMock(parameters, message, 'getMessage');
+    const mock = getMock(parameters, _react, 'useMemo');
     expect(mock).toBeCalled();
   },
 };
@@ -102,14 +96,14 @@ export const Action: ComponentStoryObj<typeof MockTest> = {
   parameters: {
     moduleMock: {
       mock: () => {
-        const mock = createMock(message, 'getMessage');
+        const mock = createMock(_react, 'useMemo');
         return [mock];
       },
     },
   },
   play: async ({ canvasElement, parameters }) => {
     const canvas = within(canvasElement);
-    const mock = getMock(parameters, message, 'getMessage');
+    const mock = getMock(parameters, _react, 'useMemo');
     mock.mockReturnValue('Action');
     userEvent.click(await canvas.findByRole('button'));
     await waitFor(() => {
