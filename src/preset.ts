@@ -12,7 +12,7 @@ export const babel = async (config: TransformOptions): Promise<TransformOptions>
   if (process.env.NODE_ENV === 'development') return config;
   return {
     ...config,
-    plugins: [...(config.plugins ?? []), require.resolve('./babel-plugin')],
+    plugins: [...(config.plugins ?? []), require.resolve('./plugins/babel-import-writer')],
   };
 };
 
