@@ -8,5 +8,6 @@ export type moduleMockParameter = {
   moduleMock: {
     mock?: () => Mocks;
     mocks?: Mocks;
+    render:()=>void
   };
 };

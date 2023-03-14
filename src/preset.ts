@@ -1,7 +1,7 @@
 import { TransformOptions } from '@babel/core';
 import { StorybookConfig } from '@storybook/core-common';
 import { Configuration } from 'webpack';
-import { ImportWriterPlugin } from './webpack/import-writer';
+import { ImportWriterPlugin } from './plugins/webpack-import-writer';
 
 export const managerEntries = (entry: string[] = []): string[] => [
   ...entry,
