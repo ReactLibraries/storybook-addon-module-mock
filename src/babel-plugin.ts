@@ -1,24 +1,23 @@
 import { types as t, PluginObj, template } from '@babel/core';
 
-const buildMocks = template(
-  `
-  const MOCKS={};
-  export const $$mock$$=(name,value)=>MOCKS[name](value);`
-);
+const buildMocks = template(`
+  const MOCKS = {};
+  export const $$mock$$ = (name, value) => MOCKS[name](value);
+`);
 
-const buildMock = template(
-  `
-  MOCKS[NAME] = 
-    function ($$value$$) {
-      const $$temp$$ = LOCAL;
-      LOCAL = $$value$$;
-      return $$temp$$;
-    }`
-);
+const buildMock = template(`
+  MOCKS[NAME] = function ($$value$$) {
+    const $$temp$$ = LOCAL;
+    LOCAL = $$value$$;
+    return $$temp$$;
+  };
+`);
 
-const plugin = (): PluginObj<{
+type PluginState = {
   moduleExports: [string, string][];
-}> => {
+};
+
+const plugin = (): PluginObj<PluginState> => {
   return {
     name: 'mocks',
     visitor: {
@@ -29,10 +28,10 @@ const plugin = (): PluginObj<{
         exit(path, { moduleExports }) {
           const mocks = path.scope.generateDeclaredUidIdentifier('mocks');
           path.pushContainer('body', buildMocks({ MOCKS: mocks }));
-          moduleExports.forEach((name) => {
+          moduleExports.forEach(([name, local]) => {
             const mock = buildMock({
-              NAME: t.stringLiteral(name[0]),
-              LOCAL: t.identifier(name[1]),
+              NAME: t.stringLiteral(name),
+              LOCAL: t.identifier(local),
               MOCKS: mocks,
             });
             path.pushContainer('body', mock);

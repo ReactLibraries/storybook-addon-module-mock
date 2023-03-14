@@ -1,7 +1,7 @@
 import { TransformOptions } from '@babel/core';
 import { StorybookConfig } from '@storybook/core-common';
 import { Configuration } from 'webpack';
-import { ImportWriterPlugiun } from './webpack/import-writer';
+import { ImportWriterPlugin } from './webpack/import-writer';
 
 export const managerEntries = (entry: string[] = []): string[] => [
   ...entry,
@@ -17,7 +17,7 @@ export const babel = async (config: TransformOptions): Promise<TransformOptions>
 };
 
 export async function webpackFinal(config: Configuration) {
-  config.plugins = [...(config.plugins ?? []), new ImportWriterPlugiun()];
+  config.plugins = [...(config.plugins ?? []), new ImportWriterPlugin()];
   return config;
 }
 
