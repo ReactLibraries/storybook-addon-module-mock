@@ -1,7 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { jest } from '@storybook/jest';
-import { Mock, moduleMockParameter } from '../types';
+import {  Mock, moduleMockParameter } from '../types';
 import type { Parameters as P } from '@storybook/react';
+
+const hookFn = <T, Y extends unknown[]>(hook: (fn: ReturnType<typeof jest.fn<T,Y>>) => void) => {
+  const fnSrc = jest.fn<T, Y>();
+  const fn = Object.assign((...args: any[]): any => {
+    const result = fnSrc(...(args as any));
+    hook(fnSrc);
+    return result;
+  }, fnSrc);
+  fn.bind(fnSrc);
+  Object.defineProperty(fn, 'mock', {
+    get: () => {
+      return fnSrc.mock;
+    },
+  });
+  return fn;
+};
 
 export const createMock: {
   <
@@ -16,7 +32,12 @@ export const createMock: {
   module: T,
   name: N = 'default' as N
 ): Mock<T, N> => {
-  const fn = jest.fn<ReturnType<T[N]>, Parameters<T[N]>>();
+  const moduleName = module.constructor.prototype.__moduleId__;
+  const funcName = name;
+
+  const fn = hookFn<ReturnType<T[N]>, Parameters<T[N]>>(() => {
+    (fn as Mock<T, N>&{__name__:string}).__module.event?.()
+  });
   if ('$$mock$$' in module) {
     const mock = (module as unknown as { $$mock$$: (name: N, value: unknown) => unknown }).$$mock$$;
     const f = mock(name, fn);
@@ -30,7 +51,7 @@ export const createMock: {
       module[name] = f;
     };
   }
-  return Object.assign(fn, { __module: { module, name } });
+  return Object.assign(fn, { __module: { module, name },__name:`[${moduleName??"unknown"}]:${String(funcName)}` });
 };
 
 export const getMock: {

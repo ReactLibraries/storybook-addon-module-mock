@@ -1,15 +1,19 @@
 {
   "name": "storybook-addon-module-mock",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "main": "dist/index.js",
   "license": "MIT",
   "scripts": {
     "build": "tsc -b",
+    "watch": "tsc -b -w",
     "lint": "eslint --fix ./src",
     "lint:fix": "eslint --fix ./src"
   },
+  "dependencies": {
+    "react-json-tree": "^0.18.0"
+  },
   "devDependencies": {
-    "@babel/core": "^7.21.0",
+    "@babel/core": "^7.21.3",
     "@storybook/addons": "^6.5.16",
     "@storybook/jest": "^0.0.10",
     "@storybook/react": "^6.5.16",

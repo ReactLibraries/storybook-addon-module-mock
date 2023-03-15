@@ -7,8 +7,13 @@ export class ImportWriterPlugin {
         return source.replace(
           /return module\.exports;/g,
           `
-        if (Object.prototype.toString.call(module.exports) === '[object Module]'){
-          module.exports = Object.assign({}, module.exports);
+        if (Object.prototype.toString.call(module.exports) === '[object Module]') {
+          class Module {
+            __esModule = true;
+            [Symbol.toStringTag] = 'Module';
+           }
+          Module.prototype.__moduleId__ = moduleId;
+          module.exports = Object.assign(new Module(), module.exports);
         }
         return module.exports;
       `
