@@ -1,4 +1,5 @@
 node_modules
+/document
 /src
 .gitignore
 yarn.lock
