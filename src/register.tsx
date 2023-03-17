@@ -1,4 +1,4 @@
-import { addons, types } from '@storybook/addons';
+import { addons, RenderOptions, types } from '@storybook/addons';
 import { useChannel } from '@storybook/api';
 import { TabWrapper } from '@storybook/components';
 import { MockInstance } from 'jest-mock';
@@ -28,7 +28,11 @@ const theme = {
 
 const Panel = () => {
   const [mocks, setMocks] = useState<[string, MockInstance<unknown, unknown[]>['mock']][]>();
-  useChannel({ [ADDON_ID]: setMocks });
+  useChannel({
+    [ADDON_ID]: (mocks) => {
+      setMocks(mocks);
+    },
+  });
 
   return (
     <div>
@@ -46,16 +50,20 @@ const Panel = () => {
   );
 };
 
-addons.register(ADDON_ID, () => {
+const render = ({ active, key }: RenderOptions) => (
+  <TabWrapper active={!!active} key={key}>
+    <Panel />
+  </TabWrapper>
+);
+
+addons.register(ADDON_ID, (api) => {
+  const property = { count: 0 };
+  api.on(ADDON_ID, (mocks) => {
+    property.count = mocks.length;
+  });
   addons.add(TAB_ID, {
     type: types.PANEL,
-    title: 'Mocks',
-    render: ({ active, key }) => {
-      return (
-        <TabWrapper active={!!active} key={key}>
-          <Panel />
-        </TabWrapper>
-      );
-    },
+    title: () => `Mocks${property.count ? `(${property.count})` : ''}`,
+    render,
   });
 });
