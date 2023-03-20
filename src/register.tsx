@@ -58,12 +58,15 @@ const render = ({ active, key }: RenderOptions) => (
 
 addons.register(ADDON_ID, (api) => {
   const property = { count: 0 };
+  const addPanel = () =>
+    addons.addPanel(TAB_ID, {
+      type: types.PANEL,
+      title: () => `Mocks${property.count ? `(${property.count})` : ''}`,
+      render,
+    });
   api.on(ADDON_ID, (mocks) => {
     property.count = mocks.length;
+    api.setAddonState(TAB_ID, {});
   });
-  addons.add(TAB_ID, {
-    type: types.PANEL,
-    title: () => `Mocks${property.count ? `(${property.count})` : ''}`,
-    render,
-  });
+  addPanel();
 });

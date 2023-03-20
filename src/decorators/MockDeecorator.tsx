@@ -1,7 +1,7 @@
 import { useChannel } from '@storybook/addons';
 import { DecoratorFn } from '@storybook/react';
 import React, { useEffect, useState, useRef } from 'react';
-import { ADDON_ID, moduleMockParameter } from './types';
+import { ADDON_ID, moduleMockParameter } from '../types';
 
 export const MockDecorator: DecoratorFn = (Story, { parameters }) => {
   const emit = useChannel({});

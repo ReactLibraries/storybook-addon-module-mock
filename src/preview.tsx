@@ -1,4 +1,4 @@
-import { MockDecorator } from './decorator';
-export { parameters } from './decorator';
+import { MockDecorator } from './decorators/MockDeecorator';
+export { parameters } from './decorators/MockDeecorator';
 
 export const decorators = [MockDecorator];
