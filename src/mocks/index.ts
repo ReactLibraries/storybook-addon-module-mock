@@ -42,18 +42,21 @@ export const createMock: {
   const fn = hookFn<ReturnType<T[N]>, Parameters<T[N]>>(() => {
     (fn as ModuleMock<T, N> & { __name__: string }).__module.event?.();
   });
-  if ('$$mock$$' in module) {
+  const descriptor = Object.getOwnPropertyDescriptor(module, name);
+  if (descriptor?.writable) {
+    const f = module[name];
+    module[name] = fn as never;
+    fn.mockRestore = () => {
+      module[name] = f;
+    };
+  } else if ('$$mock$$' in module) {
     const mock = (module as unknown as { $$mock$$: (name: N, value: unknown) => unknown }).$$mock$$;
     const f = mock(name, fn);
     fn.mockRestore = () => {
       mock(name, f);
     };
   } else {
-    const f = module[name];
-    module[name] = fn as never;
-    fn.mockRestore = () => {
-      module[name] = f;
-    };
+    throw new Error('Failed to write mock');
   }
   return Object.assign(fn, {
     __module: { module, name },

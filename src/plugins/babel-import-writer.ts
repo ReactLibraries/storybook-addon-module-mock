@@ -2,7 +2,11 @@ import { types as t, PluginObj, template } from '@babel/core';
 
 const buildMocks = template(`
   const MOCKS = {};
-  export const $$mock$$ = (name, value) => MOCKS[name](value);
+  export const $$mock$$ = (name, value) => {
+    if(typeof MOCKS[name] !== "function")
+      throw new Error("Exported function not found.");
+    return MOCKS[name](value);
+  }
 `);
 
 const buildMock = template(`
@@ -26,7 +30,7 @@ const plugin = (): PluginObj<PluginState> => {
           state.moduleExports = [];
         },
         exit(path, { moduleExports }) {
-          const mocks = path.scope.generateDeclaredUidIdentifier('mocks');
+          const mocks = path.scope.generateDeclaredUidIdentifier('$$mocks$$');
           path.pushContainer('body', buildMocks({ MOCKS: mocks }));
           moduleExports.forEach(([name, local]) => {
             const mock = buildMock({
