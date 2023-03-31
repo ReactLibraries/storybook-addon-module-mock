@@ -2,14 +2,17 @@ import { TransformOptions } from '@babel/core';
 import { StorybookConfig } from '@storybook/core-common';
 import { Configuration } from 'webpack';
 import { ImportWriterPlugin } from './plugins/webpack-import-writer';
-
+import type { Options } from '@storybook/types';
 export const managerEntries = (entry: string[] = []): string[] => [
   ...entry,
   require.resolve('./register'),
 ];
 
-export const babel = async (config: TransformOptions): Promise<TransformOptions> => {
-  if (process.env.NODE_ENV === 'development') return config;
+export const babel = async (
+  config: TransformOptions,
+  options: Options
+): Promise<TransformOptions> => {
+  if (options.configType !== 'PRODUCTION') return config;
   return {
     ...config,
     plugins: [...(config.plugins ?? []), require.resolve('./plugins/babel-import-writer')],
