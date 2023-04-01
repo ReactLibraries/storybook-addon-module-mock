@@ -19,6 +19,9 @@ Added 'storybook-addon-module-mock' to Storybook addons.
  * @type { import("@storybook/react/types").StorybookConfig}
  */
 module.exports = {
+  core: {
+    builder: 'webpack5',
+  },
   addons: ['storybook-addon-module-mock'],
 };
 ```

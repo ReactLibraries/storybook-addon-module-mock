@@ -1,11 +1,11 @@
-import { useChannel } from '@storybook/addons';
+import { useChannel, useEffect, useRef, useState } from '@storybook/addons';
 import { DecoratorFn } from '@storybook/react';
-import React, { useEffect, useState, useRef } from 'react';
 import { ADDON_ID, moduleMockParameter } from '../types';
+import type React from 'react';
 
 export const MockDecorator: DecoratorFn = (Story, { parameters, name }) => {
   const emit = useChannel({});
-  const [, render] = useState<{}>();
+  const [, render] = useState<{} | undefined>(undefined);
   const params = useRef(parameters);
   const { moduleMock } = params.current as moduleMockParameter;
   if (!moduleMock?.mocks) {
@@ -37,7 +37,7 @@ export const MockDecorator: DecoratorFn = (Story, { parameters, name }) => {
     };
   }, []);
   if (name === '$$mock$$') return <></>;
-  return <Story />;
+  return Story();
 };
 
 export const parameters: moduleMockParameter = {
