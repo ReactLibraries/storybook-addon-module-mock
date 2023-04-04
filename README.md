@@ -11,7 +11,9 @@ Added 'storybook-addon-module-mock' to Storybook addons.
 - Sample code  
   https://github.com/SoraKumo001/storybook-module-mock
 
-### .storybook/main.js
+### Storybook@6 & Next.js
+
+- .storybook/main.js
 
 ```js
 // @ts-check
@@ -22,8 +24,64 @@ module.exports = {
   core: {
     builder: 'webpack5',
   },
-  addons: ['storybook-addon-module-mock'],
+  stories: ['../src/**/*.stories.@(tsx)'],
+  addons: [
+    '@storybook/addon-essentials',
+    '@storybook/addon-interactions',
+    {
+      name: '@storybook/addon-coverage',
+      options: {
+        istanbul: {
+          exclude: ['**/components/**/index.ts'],
+        },
+      },
+    },
+    'storybook-addon-next',
+    'storybook-addon-module-mock',
+  ],
+  features: {
+    storyStoreV7: true,
+    interactionsDebugger: true,
+  },
+  typescript: { reactDocgen: 'react-docgen' },
 };
+```
+
+### Storybook@7 & Next.js
+
+- .storybook/main.ts
+
+```ts
+import type { StorybookConfig } from '@storybook/nextjs';
+
+const config: StorybookConfig = {
+  framework: {
+    name: '@storybook/nextjs',
+    options: {},
+  },
+  stories: ['../src/**/*.stories.@(tsx)'],
+  addons: [
+    '@storybook/addon-essentials',
+    '@storybook/addon-interactions',
+    {
+      name: '@storybook/addon-coverage',
+      options: {
+        istanbul: {
+          exclude: ['**/components/**/index.ts'],
+        },
+      },
+    },
+    'storybook-addon-module-mock',
+  ],
+  features: {
+    storyStoreV7: true,
+  },
+  typescript: {
+    reactDocgen: 'react-docgen',
+  },
+};
+
+export default config;
 ```
 
 ### Sample1
