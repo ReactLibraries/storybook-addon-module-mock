@@ -1,10 +1,11 @@
-import { addons, RenderOptions, types } from '@storybook/addons';
+import { addons, types } from '@storybook/addons';
 import { useChannel } from '@storybook/api';
 import { TabWrapper } from '@storybook/components';
-import { MockInstance } from 'jest-mock';
 import React, { useState } from 'react';
 import { JSONTree } from 'react-json-tree';
 import { ADDON_ID, TAB_ID } from './types';
+import type { Addon_RenderOptions } from '@storybook/types';
+import type { MockInstance } from 'jest-mock';
 
 const theme = {
   scheme: 'custom',
@@ -27,7 +28,9 @@ const theme = {
 };
 
 const Panel = () => {
-  const [mocks, setMocks] = useState<[string, MockInstance<unknown, unknown[]>['mock']][]>();
+  const [mocks, setMocks] = useState<
+    [string, MockInstance<unknown, unknown[]>['mock']][] | undefined
+  >(undefined);
   useChannel({
     [ADDON_ID]: (mocks) => {
       setMocks(mocks);
@@ -50,7 +53,7 @@ const Panel = () => {
   );
 };
 
-const render = ({ active, key }: RenderOptions) => (
+const render = ({ active, key }: Addon_RenderOptions) => (
   <TabWrapper active={!!active} key={key}>
     <Panel />
   </TabWrapper>

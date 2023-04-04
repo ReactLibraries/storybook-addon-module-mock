@@ -1,9 +1,9 @@
-import { useChannel, useEffect, useRef, useState } from '@storybook/addons';
-import { DecoratorFn } from '@storybook/react';
+import { useChannel } from '@storybook/addons';
+import { Decorator } from '@storybook/react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ADDON_ID, moduleMockParameter } from '../types';
-import type React from 'react';
 
-export const MockDecorator: DecoratorFn = (Story, { parameters, name }) => {
+export const MockDecorator: Decorator = (Story, { parameters, name }) => {
   const emit = useChannel({});
   const [, render] = useState<{} | undefined>(undefined);
   const params = useRef(parameters);

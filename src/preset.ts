@@ -1,8 +1,8 @@
 import { TransformOptions } from '@babel/core';
-import { StorybookConfig } from '@storybook/core-common';
-import { Configuration } from 'webpack';
 import { ImportWriterPlugin } from './plugins/webpack-import-writer';
+import type { StorybookConfig } from '@storybook/types';
 import type { Options } from '@storybook/types';
+import type { Configuration } from 'webpack';
 export const managerEntries = (entry: string[] = []): string[] => [
   ...entry,
   require.resolve('./register'),
