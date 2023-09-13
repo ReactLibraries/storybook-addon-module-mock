@@ -1,4 +1,4 @@
-import { types as t, PluginObj, template } from '@babel/core';
+import { types as t, PluginObj, template, NodePath } from '@babel/core';
 
 const buildMocks = template(`
   const MOCKS = {};
@@ -21,6 +21,21 @@ type PluginState = {
   moduleExports: [string, string][];
 };
 
+const isModuleExports = (path: NodePath<t.Program>) => {
+  let hasModuleExports = false;
+  path.traverse({
+    Identifier(idPath) {
+      if (
+        idPath.node.name === 'module' &&
+        (idPath.parentPath.node as { property: { name: string } }).property.name === 'exports'
+      ) {
+        hasModuleExports = true;
+      }
+    },
+  });
+  return hasModuleExports;
+};
+
 const plugin = (): PluginObj<PluginState> => {
   return {
     name: 'mocks',
@@ -30,16 +45,18 @@ const plugin = (): PluginObj<PluginState> => {
           state.moduleExports = [];
         },
         exit(path, { moduleExports }) {
-          const mocks = path.scope.generateDeclaredUidIdentifier('$$mocks$$');
-          path.pushContainer('body', buildMocks({ MOCKS: mocks }));
-          moduleExports.forEach(([name, local]) => {
-            const mock = buildMock({
-              NAME: t.stringLiteral(name),
-              LOCAL: t.identifier(local),
-              MOCKS: mocks,
+          if (!isModuleExports(path)) {
+            const mocks = path.scope.generateDeclaredUidIdentifier('$$mocks$$');
+            path.pushContainer('body', buildMocks({ MOCKS: mocks }));
+            moduleExports.forEach(([name, local]) => {
+              const mock = buildMock({
+                NAME: t.stringLiteral(name),
+                LOCAL: t.identifier(local),
+                MOCKS: mocks,
+              });
+              path.pushContainer('body', mock);
             });
-            path.pushContainer('body', mock);
-          });
+          }
         },
       },
       ExportNamedDeclaration(path, { moduleExports }) {
