@@ -17,7 +17,7 @@ const hookFn = <T, Y extends unknown[]>(hook: (fn: Mock<T, Y>) => void) => {
       return fnSrc.mock;
     },
   });
-  return fn;
+  return fn as Mock<T, Y> & { originalValue?: unknown };
 };
 
 export const createMock: {
@@ -43,15 +43,18 @@ export const createMock: {
     (fn as ModuleMock<T, N> & { __name__: string }).__module.event?.();
   });
   const descriptor = Object.getOwnPropertyDescriptor(module, name);
+  let original: unknown;
   if (descriptor?.writable) {
     const f = module[name];
     module[name] = fn as never;
+    original = f;
     fn.mockRestore = () => {
       module[name] = f;
     };
   } else if ('$$mock$$' in module) {
     const mock = (module as unknown as { $$mock$$: (name: N, value: unknown) => unknown }).$$mock$$;
     const f = mock(name, fn);
+    original = f;
     fn.mockRestore = () => {
       mock(name, f);
     };
@@ -61,7 +64,17 @@ export const createMock: {
   return Object.assign(fn, {
     __module: { module, name },
     __name: `[${moduleName ?? 'unknown'}]:${String(funcName)}`,
+    __original: original as T[N],
   });
+};
+
+export const getOriginal = <
+  T extends { [key in N]: (...args: any[]) => unknown },
+  N extends keyof T = 'default' extends keyof T ? keyof T : never
+>(
+  mock: ModuleMock<T, N>
+): T[N] extends never ? any : T[N] => {
+  return mock.__original as T[N];
 };
 
 export const getMock: {
