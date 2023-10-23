@@ -5,14 +5,14 @@ import { ADDON_ID, moduleMockParameter } from '../types';
 
 export const MockDecorator: Decorator = (Story, { parameters, name }) => {
   const emit = useChannel({});
-  const [, render] = useState<{} | undefined>(undefined);
+  const [{ args }, render] = useState<{ args?: object }>({});
   const params = useRef(parameters);
   const { moduleMock } = params.current as moduleMockParameter;
   if (!moduleMock?.mocks) {
     const m = moduleMock?.mock?.();
     const mocks = !m ? undefined : Array.isArray(m) ? m : [m];
     moduleMock.mocks = mocks;
-    moduleMock.render = () => render({});
+    moduleMock.render = (args) => render({ args });
     if (mocks) {
       const sendStat = () => {
         emit(
@@ -37,7 +37,7 @@ export const MockDecorator: Decorator = (Story, { parameters, name }) => {
     };
   }, []);
   if (name === '$$mock$$') return <></>;
-  return Story();
+  return Story(args ? { args } : undefined);
 };
 
 export const parameters: moduleMockParameter = {

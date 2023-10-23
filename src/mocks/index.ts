@@ -111,6 +111,6 @@ export const clearMock = (parameters: P) => {
   });
 };
 
-export const render = (parameters: P) => {
-  (parameters as moduleMockParameter).moduleMock.render();
+export const render = (parameters: P, args?: object) => {
+  (parameters as moduleMockParameter).moduleMock.render(args);
 };

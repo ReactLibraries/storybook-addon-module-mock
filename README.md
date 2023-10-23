@@ -271,3 +271,164 @@ export const Action: ComponentStoryObj<typeof LibHook> = {
   },
 };
 ```
+
+### Sample3
+
+#### MockTest.tsx
+
+```tsx
+import React, { FC, useMemo, useState } from 'react';
+interface Props {}
+
+/**
+ * MockTest
+ *
+ * @param {Props} { }
+ */
+export const MockTest: FC<Props> = ({}) => {
+  const [, reload] = useState({});
+  const value = useMemo(() => {
+    return 'Before';
+  }, []);
+  return (
+    <div>
+      <button onClick={() => reload({})}>{value}</button>
+    </div>
+  );
+};
+```
+
+#### MockTest.stories.tsx
+
+```tsx
+import { expect } from '@storybook/jest';
+import { Meta, StoryObj } from '@storybook/react';
+import { userEvent, waitFor, within } from '@storybook/testing-library';
+import React from 'react';
+import { createMock, getMock, getOriginal } from 'storybook-addon-module-mock';
+import { MockTest } from './MockTest';
+
+const meta: Meta<typeof MockTest> = {
+  component: MockTest,
+};
+export default meta;
+
+export const Primary: StoryObj<typeof MockTest> = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    expect(canvas.getByText('Before')).toBeInTheDocument();
+  },
+};
+
+export const Mock: StoryObj<typeof MockTest> = {
+  parameters: {
+    moduleMock: {
+      mock: () => {
+        const mock = createMock(React, 'useMemo');
+        mock.mockImplementation((fn: () => unknown, deps: unknown[]) => {
+          // Call the original useMemo
+          const value = getOriginal(mock)(fn, deps);
+          // Change the return value under certain conditions
+          return value === 'Before' ? 'After' : value;
+        });
+        return [mock];
+      },
+    },
+  },
+  play: async ({ canvasElement, parameters }) => {
+    const canvas = within(canvasElement);
+    expect(canvas.getByText('After')).toBeInTheDocument();
+    const mock = getMock(parameters, React, 'useMemo');
+    expect(mock).toBeCalled();
+  },
+};
+
+export const Action: StoryObj<typeof MockTest> = {
+  parameters: {
+    moduleMock: {
+      mock: () => {
+        const useMemo = React.useMemo;
+        const mock = createMock(React, 'useMemo');
+        mock.mockImplementation(useMemo);
+        return [mock];
+      },
+    },
+  },
+  play: async ({ canvasElement, parameters }) => {
+    const canvas = within(canvasElement);
+    const mock = getMock(parameters, React, 'useMemo');
+    mock.mockImplementation((fn: () => unknown, deps: unknown[]) => {
+      const value = getOriginal(mock)(fn, deps);
+      return value === 'Before' ? 'Action' : value;
+    });
+    userEvent.click(await canvas.findByRole('button'));
+    await waitFor(() => {
+      expect(canvas.getByText('Action')).toBeInTheDocument();
+    });
+  },
+};
+```
+
+### Sample4
+
+#### ReRenderArgs.tsx
+
+```tsx
+import React, { FC } from 'react';
+import styled from './ReRenderArgs.module.scss';
+
+interface Props {
+  value: string;
+}
+
+/**
+ * ReRenderArgs
+ *
+ * @param {Props} { value: string }
+ */
+export const ReRenderArgs: FC<Props> = ({ value }) => {
+  return <div className={styled.root}>{value}</div>;
+};
+```
+
+#### ReRenderArgs.stories.tsx
+
+```tsx
+import { expect } from '@storybook/jest';
+import { Meta, StoryObj } from '@storybook/react';
+import { waitFor, within } from '@storybook/testing-library';
+import { render } from 'storybook-addon-module-mock';
+import { ReRenderArgs } from './ReRenderArgs';
+
+const meta: Meta<typeof ReRenderArgs> = {
+  component: ReRenderArgs,
+  args: { value: 'Test' },
+};
+export default meta;
+
+export const Primary: StoryObj<typeof ReRenderArgs> = {
+  args: {},
+  play: async ({ canvasElement, parameters }) => {
+    const canvas = within(canvasElement);
+    expect(canvas.getByText('Test')).toBeInTheDocument();
+
+    // Re-render with new props
+    render(parameters, { value: 'Test2' });
+    await waitFor(() => {
+      expect(canvas.getByText('Test2')).toBeInTheDocument();
+    });
+
+    // Re-render with new props
+    render(parameters, { value: 'Test3' });
+    await waitFor(() => {
+      expect(canvas.getByText('Test3')).toBeInTheDocument();
+    });
+
+    // Re-render with new props
+    render(parameters, { value: 'Test4' });
+    await waitFor(() => {
+      expect(canvas.getByText('Test4')).toBeInTheDocument();
+    });
+  },
+};
+```
