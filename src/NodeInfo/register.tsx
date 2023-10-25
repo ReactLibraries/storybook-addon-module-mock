@@ -2,7 +2,7 @@ import { TabWrapper } from '@storybook/components';
 import { addons, types, useChannel } from '@storybook/manager-api';
 import React, { useState } from 'react';
 import { JSONTree } from 'react-json-tree';
-import { ADDON_ID, NodeInfo, TAB_ID } from './types';
+import { ADDON_ID, NodeInfo, TAB_ID } from './types.js';
 import type { Addon_RenderOptions } from '@storybook/types';
 
 const theme = {

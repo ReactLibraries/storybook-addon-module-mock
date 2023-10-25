@@ -1,5 +1,5 @@
 import { TransformOptions } from '@babel/core';
-import { ImportWriterPlugin } from './plugins/webpack-import-writer';
+import { ImportWriterPlugin } from './plugins/webpack-import-writer.js';
 import type { StorybookConfig } from '@storybook/types';
 import type { Options } from '@storybook/types';
 import type { Configuration } from 'webpack';

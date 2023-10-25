@@ -3,6 +3,7 @@
 Provides module mocking functionality like `jest.mock` on Storybook.
 
 ![](https://raw.githubusercontent.com/ReactLibraries/storybook-addon-module-mock/master/document/image/image01.png)
+![](https://raw.githubusercontent.com/ReactLibraries/storybook-addon-module-mock/master/document/image/image02.png)
 
 ## usage
 

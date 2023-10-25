@@ -3,7 +3,7 @@ import { useChannel } from '@storybook/api';
 import { TabWrapper } from '@storybook/components';
 import React, { useState } from 'react';
 import { JSONTree } from 'react-json-tree';
-import { ADDON_ID, TAB_ID } from './types';
+import { ADDON_ID, TAB_ID } from './types.js';
 import type { Addon_RenderOptions } from '@storybook/types';
 import type { MockInstance } from 'jest-mock';
 const theme = {

@@ -1,9 +1,11 @@
 node_modules
 /document
 /src
+/esm
 .gitignore
 yarn.lock
 tsconfig.json
+tsconfig.esm.json
 jest.config.js
 .eslintrc.json
 .github

@@ -1,2 +1,2 @@
-export * from './ModuleMock/types';
-export * from './mocks';
+export * from './ModuleMock/types.js';
+export * from './mocks/index.js';

@@ -1,7 +1,7 @@
 import { useChannel, useEffect } from '@storybook/addons';
 import { Decorator } from '@storybook/react';
 import React from 'react';
-import { ADDON_ID } from './types';
+import { ADDON_ID } from './types.js';
 
 const getDisplayValue = (element: Element) =>
   element instanceof HTMLInputElement

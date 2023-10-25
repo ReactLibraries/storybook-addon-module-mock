@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { jest } from '@storybook/jest';
-import { ModuleMock, moduleMockParameter } from '../ModuleMock/types';
+import { ModuleMock, moduleMockParameter } from '../ModuleMock/types.js';
 import type { Parameters as P } from '@storybook/react';
 import type { Mock } from 'jest-mock';
 

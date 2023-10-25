@@ -1,3 +1,3 @@
-import { NodeInfoDecorator } from "./NodeInfoDecorator";
+import { NodeInfoDecorator } from './NodeInfoDecorator.js';
 
 export const decorators = [NodeInfoDecorator];

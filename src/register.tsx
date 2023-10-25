@@ -1,2 +1,2 @@
-import './ModuleMock/register';
-import './NodeInfo/register';
+import './ModuleMock/register.js';
+import './NodeInfo/register.js';

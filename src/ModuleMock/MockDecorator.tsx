@@ -2,7 +2,7 @@ import { useChannel, useEffect, useRef, useState } from '@storybook/addons';
 import { STORY_RENDER_PHASE_CHANGED } from '@storybook/core-events';
 import { Decorator } from '@storybook/react';
 import React from 'react';
-import { ADDON_ID, moduleMockParameter } from './types';
+import { ADDON_ID, moduleMockParameter } from './types.js';
 
 export const MockDecorator: Decorator = (Story, context) => {
   const { parameters, name, id } = context;
