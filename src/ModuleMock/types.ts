@@ -16,6 +16,8 @@ export type moduleMockParameter = {
   moduleMock: {
     mock?: () => Mocks;
     mocks?: Mocks;
-    render: (args?: object) => void;
+    render: (args?: { [key: string]: unknown }) => void;
   };
 };
+
+export type moduleMock = Pick<moduleMockParameter['moduleMock'], 'mock'>;

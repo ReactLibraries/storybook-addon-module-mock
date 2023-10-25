@@ -1,6 +1,7 @@
-import { DecoratorFn } from '@storybook/react';
+import { useChannel, useEffect } from '@storybook/addons';
+import { Decorator } from '@storybook/react';
 import React from 'react';
-import { useEffect } from 'react';
+import { ADDON_ID } from './types';
 
 const getDisplayValue = (element: Element) =>
   element instanceof HTMLInputElement
@@ -59,7 +60,9 @@ const getAccessibility = (node: Element) =>
       .map(({ name, value }) => [name, value]),
   ]);
 
-export const InfoDecorator: DecoratorFn = (Story) => {
+export const NodeInfoDecorator: Decorator = (Story) => {
+  const emit = useChannel({});
+
   useEffect(() => {
     const property: { element?: Element | null } = {};
     const handleMouseMove = (e: MouseEvent) => {
@@ -68,9 +71,8 @@ export const InfoDecorator: DecoratorFn = (Story) => {
       const element = document.elementFromPoint(mouseX, mouseY);
       if (element !== property.element) {
         property.element = element;
-        element &&
-          !['html', 'body'].includes(element.tagName.toLowerCase()) &&
-          console.table({
+        const item = element &&
+          !['html', 'body'].includes(element.tagName.toLowerCase()) && {
             tag: element.tagName,
             role: getRole(element),
             accessibility: getAccessibility(element),
@@ -79,13 +81,14 @@ export const InfoDecorator: DecoratorFn = (Story) => {
             testId: element.getAttribute('data-testid'),
             placeholder: element.getAttribute('placeholder'),
             text: element.textContent?.trim(),
-          });
+          };
+        item && emit(ADDON_ID, item);
       }
     };
     document.addEventListener('mousemove', handleMouseMove);
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
     };
-  }, []);
+  }, [emit]);
   return <Story />;
 };

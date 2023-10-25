@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { jest } from '@storybook/jest';
-import { ModuleMock, moduleMockParameter } from '../types';
+import { ModuleMock, moduleMockParameter } from '../ModuleMock/types';
 import type { Parameters as P } from '@storybook/react';
 import type { Mock } from 'jest-mock';
 
@@ -111,6 +111,6 @@ export const clearMock = (parameters: P) => {
   });
 };
 
-export const render = (parameters: P, args?: object) => {
+export const render = (parameters: P, args?: { [key: string]: unknown }) => {
   (parameters as moduleMockParameter).moduleMock.render(args);
 };

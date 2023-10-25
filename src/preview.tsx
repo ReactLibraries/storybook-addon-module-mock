@@ -1,4 +1,6 @@
-import { MockDecorator } from './decorators/MockDeecorator';
-export { parameters } from './decorators/MockDeecorator';
+import { MockDecorator } from './ModuleMock/MockDecorator';
+import { NodeInfoDecorator } from './NodeInfo/NodeInfoDecorator';
 
-export const decorators = [MockDecorator];
+export { parameters } from './ModuleMock/MockDecorator';
+
+export const decorators = [MockDecorator, NodeInfoDecorator];
