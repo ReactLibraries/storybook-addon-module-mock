@@ -2,50 +2,43 @@
 
 Provides module mocking functionality like `jest.mock` on Storybook.
 
-![](https://raw.githubusercontent.com/ReactLibraries/storybook-addon-module-mock/master/document/image/image01.png)
+![](https://raw.githubusercontent.com/ReactLibraries/storybook-addon-module-mock/master/document/image/image01.png)  
 ![](https://raw.githubusercontent.com/ReactLibraries/storybook-addon-module-mock/master/document/image/image02.png)
 
 ## usage
 
 Added 'storybook-addon-module-mock' to Storybook addons.
+Only works if Webpack is used in the Builder.
 
 - Sample code  
   https://github.com/SoraKumo001/storybook-module-mock
 
-### Storybook@6 & Next.js
+## Regarding how to interrupt a mock
 
-- .storybook/main.js
+Interruptions vary depending on the Storybook mode.
 
-```js
-// @ts-check
-/**
- * @type { import("@storybook/react/types").StorybookConfig}
- */
-module.exports = {
-  core: {
-    builder: 'webpack5',
-  },
-  stories: ['../src/**/*.stories.@(tsx)'],
+- storybook dev
+  - Make `module.exports` writable using Webpack functionality
+- storybook build
+  - Insert code to rewrite `module.exports` using Babel functionality
+
+## Addon options
+
+Include and exclude are enabled for `storybook build` where Babel is used.
+Not used in `storybook dev`.
+
+If include is omitted, all modules are covered.
+
+```tsx
   addons: [
-    '@storybook/addon-essentials',
-    '@storybook/addon-interactions',
     {
-      name: '@storybook/addon-coverage',
+      name: 'storybook-addon-module-mock',
       options: {
-        istanbul: {
-          exclude: ['**/components/**/index.ts'],
-        },
-      },
-    },
-    'storybook-addon-next',
-    'storybook-addon-module-mock',
+        include: [/message/,"**/action.*"], // RegExp or glob pattern
+        exclude: ["**/node_modules/**"],
+      }
+    }
   ],
-  features: {
-    storyStoreV7: true,
-    interactionsDebugger: true,
-  },
-  typescript: { reactDocgen: 'react-docgen' },
-};
 ```
 
 ### Storybook@7 & Next.js

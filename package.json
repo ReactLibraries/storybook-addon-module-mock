@@ -1,6 +1,6 @@
 {
   "name": "storybook-addon-module-mock",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "main": "./dist/cjs/index.js",
   "types": "./dist/cjs/index.d.ts",
   "exports": {
@@ -18,23 +18,25 @@
     "build": "tsc && tsc -p ./tsconfig.esm.json && cpy esm dist",
     "watch": "tsc -b -w",
     "lint": "eslint --fix ./src",
-    "lint:fix": "eslint --fix ./src"
+    "lint:fix": "eslint --fix ./src",
+    "cp": "cpy dist ../../../test/storybook-module-mock/node_modules/storybook-addon-module-mock"
   },
   "dependencies": {
+    "minimatch": "*",
     "react-json-tree": "^0.18.0"
   },
   "devDependencies": {
     "@babel/core": "^7.23.2",
-    "@storybook/addons": "^7.5.1",
-    "@storybook/api": "^7.5.1",
-    "@storybook/components": "^7.5.1",
+    "@storybook/addons": "^7.5.2",
+    "@storybook/api": "^7.5.2",
+    "@storybook/components": "^7.5.2",
     "@storybook/jest": "^0.2.3",
-    "@storybook/react": "^7.5.1",
-    "@storybook/types": "^7.5.1",
+    "@storybook/react": "^7.5.2",
+    "@storybook/types": "^7.5.2",
     "@types/babel__core": "^7.20.3",
-    "@types/react": "^18.2.31",
-    "@typescript-eslint/eslint-plugin": "^6.9.0",
-    "@typescript-eslint/parser": "^6.9.0",
+    "@types/react": "^18.2.33",
+    "@typescript-eslint/eslint-plugin": "^6.9.1",
+    "@typescript-eslint/parser": "^6.9.1",
     "cpy-cli": "^5.0.0",
     "eslint": "8.52.0",
     "eslint-config-prettier": "^9.0.0",
