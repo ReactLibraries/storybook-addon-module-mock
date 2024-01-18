@@ -1,6 +1,6 @@
 {
-  "name": "storybook-addon-module-mock",
-  "version": "1.1.4",
+  "name": "@storybook/addon-module-mock",
+  "version": "1.1.5",
   "main": "./dist/cjs/index.js",
   "types": "./dist/cjs/index.d.ts",
   "exports": {
@@ -27,8 +27,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.23.7",
-    "@storybook/addons": "^7.6.7",
-    "@storybook/api": "^7.6.7",
+    "@storybook/manager-api": "^7.6.7",
+    "@storybook/preview-api": "^7.6.7",
     "@storybook/components": "^7.6.7",
     "@storybook/jest": "^0.2.3",
     "@storybook/react": "^7.6.7",

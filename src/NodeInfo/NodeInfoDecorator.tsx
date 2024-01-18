@@ -1,4 +1,4 @@
-import { useChannel, useEffect } from '@storybook/addons';
+import { useChannel, useEffect } from '@storybook/preview-api';
 import { Decorator } from '@storybook/react';
 import React from 'react';
 import { ADDON_ID } from './types.js';
