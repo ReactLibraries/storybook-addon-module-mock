@@ -4,9 +4,10 @@ import type { AddonOptions } from './types.js';
 import type { StorybookConfig } from '@storybook/types';
 import type { Options } from '@storybook/types';
 import type { Configuration } from 'webpack';
+
 export const managerEntries = (entry: string[] = []): string[] => [
   ...entry,
-  require.resolve('./register'),
+  require.resolve('./manager'),
 ];
 
 export const babel = async (
@@ -29,7 +30,7 @@ export async function webpackFinal(config: Configuration) {
   return config;
 }
 
-export const config: StorybookConfig['previewAnnotations'] = (entry = []) => [
+export const previewAnnotations: StorybookConfig['previewAnnotations'] = (entry = []) => [
   ...entry,
   require.resolve('./preview'),
 ];

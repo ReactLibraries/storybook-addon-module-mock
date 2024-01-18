@@ -1,6 +1,5 @@
-import { addons, types } from '@storybook/addons';
-import { useChannel } from '@storybook/api';
 import { TabWrapper } from '@storybook/components';
+import { addons, types, useChannel } from '@storybook/manager-api';
 import React, { useState } from 'react';
 import { JSONTree } from 'react-json-tree';
 import { ADDON_ID, TAB_ID } from './types.js';

@@ -1,5 +1,5 @@
-import { useChannel, useEffect, useRef, useState } from '@storybook/addons';
 import { STORY_RENDER_PHASE_CHANGED } from '@storybook/core-events';
+import { useChannel, useEffect, useRef, useState } from '@storybook/preview-api';
 import { Decorator } from '@storybook/react';
 import React from 'react';
 import { ADDON_ID, moduleMockParameter } from './types.js';
