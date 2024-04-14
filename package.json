@@ -22,6 +22,7 @@
     "cp": "cpy dist ../../../test/storybook-module-mock/node_modules/storybook-addon-module-mock"
   },
   "dependencies": {
+    "jest-mock": "^27.3.0",
     "minimatch": "^9.0.3",
     "react-json-tree": "^0.18.0"
   },
