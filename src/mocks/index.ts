@@ -2,10 +2,9 @@
 import { jest } from '@storybook/jest';
 import { ModuleMock, moduleMockParameter } from '../ModuleMock/types.js';
 import type { Parameters as P } from '@storybook/react';
-import type { Mock } from 'jest-mock';
 
-const hookFn = <T, Y extends unknown[]>(hook: (fn: Mock<T, Y>) => void) => {
-  const fnSrc = jest.fn<T, Y>();
+const hookFn = <T, Y extends unknown[]>(hook: (fn: jest.Mock<T, Y>) => void) => {
+  const fnSrc = jest.fn<T, Y>() as jest.Mock<T, Y>;
   const fn = Object.assign((...args: any[]): any => {
     const result = fnSrc(...(args as any));
     hook(fnSrc);
@@ -17,7 +16,7 @@ const hookFn = <T, Y extends unknown[]>(hook: (fn: Mock<T, Y>) => void) => {
       return fnSrc.mock;
     },
   });
-  return fn as Mock<T, Y> & { originalValue?: unknown };
+  return fn as jest.Mock<T, Y> & { originalValue?: unknown };
 };
 
 export const createMock: {
@@ -40,7 +39,7 @@ export const createMock: {
   const funcName = name;
 
   const fn = hookFn<ReturnType<T[N]>, Parameters<T[N]>>(() => {
-    (fn as ModuleMock<T, N> & { __name__: string }).__module.event?.();
+    (fn as ModuleMock<T, N>).__module.event?.();
   });
   const descriptor = Object.getOwnPropertyDescriptor(module, name);
   let original: unknown;
@@ -65,7 +64,7 @@ export const createMock: {
     __module: { module, name },
     __name: `[${moduleName ?? 'unknown'}]:${String(funcName)}`,
     __original: original as T[N],
-  });
+  }) as ModuleMock<T, N>;
 };
 
 export const getOriginal = <

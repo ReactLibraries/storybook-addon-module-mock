@@ -1,7 +1,6 @@
 import { TransformOptions } from '@babel/core';
 import { ImportWriterPlugin } from './plugins/webpack-import-writer.js';
 import type { AddonOptions } from './types.js';
-import type { StorybookConfig } from '@storybook/types';
 import type { Options } from '@storybook/types';
 import type { Configuration } from 'webpack';
 
@@ -25,12 +24,7 @@ export const babel = async (
   };
 };
 
-export async function webpackFinal(config: Configuration) {
+export async function webpack(config: Configuration) {
   config.plugins = [...(config.plugins ?? []), new ImportWriterPlugin()];
   return config;
 }
-
-export const previewAnnotations: StorybookConfig['previewAnnotations'] = (entry = []) => [
-  ...entry,
-  require.resolve('./preview'),
-];

@@ -1,6 +1,6 @@
 {
   "name": "storybook-addon-module-mock",
-  "version": "1.1.6",
+  "version": "1.2.0",
   "main": "./dist/cjs/index.js",
   "types": "./dist/cjs/index.d.ts",
   "exports": {
@@ -11,6 +11,10 @@
     "./preset": {
       "require": "./dist/cjs/preset.js",
       "import": "./dist/esm/preset.js"
+    },
+    "./preview": {
+      "require": "./dist/cjs/preview.js",
+      "import": "./dist/esm/preview.js"
     }
   },
   "license": "MIT",
@@ -19,33 +23,32 @@
     "watch": "tsc -b -w",
     "lint": "eslint --fix ./src",
     "lint:fix": "eslint --fix ./src",
-    "cp": "cpy dist ../../../test/storybook-module-mock/node_modules/storybook-addon-module-mock"
+    "cp": "yarn build && cpy dist ../../../test/storybook-module-mock/node_modules/storybook-addon-module-mock"
   },
   "dependencies": {
-    "jest-mock": "^27.3.0",
-    "minimatch": "^9.0.3",
-    "react-json-tree": "^0.18.0"
+    "minimatch": "^9.0.4",
+    "react-json-tree": "^0.19.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.7",
-    "@storybook/components": "^7.6.9",
+    "@babel/core": "^7.24.4",
+    "@storybook/components": "^8.0.9",
     "@storybook/jest": "^0.2.3",
-    "@storybook/manager-api": "^7.6.9",
-    "@storybook/preview-api": "^7.6.9",
-    "@storybook/react": "^7.6.9",
-    "@storybook/types": "^7.6.9",
+    "@storybook/manager-api": "^8.0.9",
+    "@storybook/preview-api": "^8.0.9",
+    "@storybook/react": "^8.0.9",
+    "@storybook/types": "^8.0.9",
     "@types/babel__core": "^7.20.5",
-    "@types/react": "^18.2.48",
-    "@typescript-eslint/eslint-plugin": "^6.19.0",
-    "@typescript-eslint/parser": "^6.19.0",
+    "@types/react": "^18.3.1",
+    "@typescript-eslint/eslint-plugin": "^7.7.1",
+    "@typescript-eslint/parser": "^7.7.1",
     "cpy-cli": "^5.0.0",
-    "eslint": "8.56.0",
+    "eslint": "9.1.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.1",
-    "react": "^18.2.0",
-    "typescript": "^5.3.3",
-    "webpack": "^5.89.0"
+    "react": "^18.3.1",
+    "typescript": "^5.4.5",
+    "webpack": "^5.91.0"
   },
   "repository": "https://github.com/ReactLibraries/storybook-addon-module-mock",
   "keywords": [
