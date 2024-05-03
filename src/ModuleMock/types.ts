@@ -10,9 +10,10 @@ export type ModuleType<T, N> = {
 };
 export type Mocks = (Mock & ModuleType<unknown, unknown>)[];
 export type ModuleMock<
-  T extends { [key: string | number]: (...args: unknown[]) => unknown[] },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  T extends { [key: string | number]: (...args: any[]) => unknown },
   N extends keyof T
-> = Mock<ReturnType<T[N]>, Parameters<T[N]>> & ModuleType<T, N>;
+> = Mock<Parameters<T[N]>, ReturnType<T[N]>> & ModuleType<T, N>;
 export type moduleMockParameter = {
   moduleMock: {
     mock?: () => Mocks;

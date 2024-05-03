@@ -3,7 +3,7 @@ import { Mock, fn } from '@storybook/test';
 import { ModuleMock, moduleMockParameter } from '../ModuleMock/types.js';
 import type { Parameters as P } from '@storybook/react';
 
-const hookFn = <T extends any[], Y extends unknown[]>(hook: (fn: Mock<T, Y>) => void) => {
+const hookFn = <T, Y extends unknown[]>(hook: (fn: Mock<Y, T>) => void) => {
   const fnSrc = fn();
   const func = Object.assign((...args: any[]): any => {
     const result = fnSrc(...(args as any));
@@ -22,17 +22,17 @@ const hookFn = <T extends any[], Y extends unknown[]>(hook: (fn: Mock<T, Y>) => 
 
 export const createMock: {
   <
-    T extends { [key: string | number]: (...args: unknown[]) => unknown[] },
+    T extends { [key in N]: (...args: any[]) => unknown },
     N extends keyof T = 'default' extends keyof T ? keyof T : never
   >(
     module: T,
     name?: N
   ): ModuleMock<T, N>;
-  <T extends { [key in 'default']: (...args: any[]) => unknown[] }>(module: T): ModuleMock<
+  <T extends { [key in 'default']: (...args: any[]) => unknown }>(module: T): ModuleMock<
     T,
     'default'
   >;
-} = <T extends { [key in N]: (...args: any[]) => unknown[] }, N extends keyof T>(
+} = <T extends { [key in N]: (...args: any[]) => unknown }, N extends keyof T>(
   module: T,
   name: N = 'default' as N
 ): ModuleMock<T, N> => {
@@ -69,7 +69,7 @@ export const createMock: {
 };
 
 export const getOriginal = <
-  T extends { [key in N]: (...args: any[]) => unknown[] },
+  T extends { [key in N]: (...args: any[]) => unknown },
   N extends keyof T = 'default' extends keyof T ? keyof T : never
 >(
   mock: ModuleMock<T, N>
@@ -78,16 +78,16 @@ export const getOriginal = <
 };
 
 export const getMock: {
-  <T extends { [key in N]: (...args: any[]) => unknown[] }, N extends keyof T>(
+  <T extends { [key in N]: (...args: any[]) => unknown }, N extends keyof T>(
     parameters: P,
     module: T,
     name: N
   ): ModuleMock<T, N>;
-  <T extends { [key in 'default']: (...args: any[]) => unknown[] }>(
+  <T extends { [key in 'default']: (...args: any[]) => unknown }>(
     parameters: P,
     module: T
   ): ModuleMock<T, 'default'>;
-} = <T extends { [key in N]: (...args: any[]) => unknown[] }, N extends keyof T>(
+} = <T extends { [key in N]: (...args: any[]) => unknown }, N extends keyof T>(
   parameters: P,
   module: T,
   name: N = 'default' as N
