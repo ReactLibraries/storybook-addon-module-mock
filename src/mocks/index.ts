@@ -1,37 +1,38 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { jest } from '@storybook/jest';
+import { Mock, fn } from '@storybook/test';
 import { ModuleMock, moduleMockParameter } from '../ModuleMock/types.js';
 import type { Parameters as P } from '@storybook/react';
 
-const hookFn = <T, Y extends unknown[]>(hook: (fn: jest.Mock<T, Y>) => void) => {
-  const fnSrc = jest.fn<T, Y>() as jest.Mock<T, Y>;
-  const fn = Object.assign((...args: any[]): any => {
+const hookFn = <T extends any[], Y extends unknown[]>(hook: (fn: Mock<T, Y>) => void) => {
+  const fnSrc = fn();
+  const func = Object.assign((...args: any[]): any => {
     const result = fnSrc(...(args as any));
     hook(fnSrc);
     return result;
   }, fnSrc);
-  fn.bind(fnSrc);
-  Object.defineProperty(fn, 'mock', {
+  func.bind(fnSrc);
+  Object.defineProperty(func, '_isMockFunction', { value: true });
+  Object.defineProperty(func, 'mock', {
     get: () => {
       return fnSrc.mock;
     },
   });
-  return fn as jest.Mock<T, Y> & { originalValue?: unknown };
+  return func as Mock & { originalValue?: unknown };
 };
 
 export const createMock: {
   <
-    T extends { [key in N]: (...args: any[]) => unknown },
+    T extends { [key: string | number]: (...args: unknown[]) => unknown[] },
     N extends keyof T = 'default' extends keyof T ? keyof T : never
   >(
     module: T,
     name?: N
   ): ModuleMock<T, N>;
-  <T extends { [key in 'default']: (...args: any[]) => unknown }>(module: T): ModuleMock<
+  <T extends { [key in 'default']: (...args: any[]) => unknown[] }>(module: T): ModuleMock<
     T,
     'default'
   >;
-} = <T extends { [key in N]: (...args: any[]) => unknown }, N extends keyof T>(
+} = <T extends { [key in N]: (...args: any[]) => unknown[] }, N extends keyof T>(
   module: T,
   name: N = 'default' as N
 ): ModuleMock<T, N> => {
@@ -68,7 +69,7 @@ export const createMock: {
 };
 
 export const getOriginal = <
-  T extends { [key in N]: (...args: any[]) => unknown },
+  T extends { [key in N]: (...args: any[]) => unknown[] },
   N extends keyof T = 'default' extends keyof T ? keyof T : never
 >(
   mock: ModuleMock<T, N>
@@ -77,16 +78,16 @@ export const getOriginal = <
 };
 
 export const getMock: {
-  <T extends { [key in N]: (...args: any[]) => unknown }, N extends keyof T>(
+  <T extends { [key in N]: (...args: any[]) => unknown[] }, N extends keyof T>(
     parameters: P,
     module: T,
     name: N
   ): ModuleMock<T, N>;
-  <T extends { [key in 'default']: (...args: any[]) => unknown }>(
+  <T extends { [key in 'default']: (...args: any[]) => unknown[] }>(
     parameters: P,
     module: T
   ): ModuleMock<T, 'default'>;
-} = <T extends { [key in N]: (...args: any[]) => unknown }, N extends keyof T>(
+} = <T extends { [key in N]: (...args: any[]) => unknown[] }, N extends keyof T>(
   parameters: P,
   module: T,
   name: N = 'default' as N

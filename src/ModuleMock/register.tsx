@@ -3,8 +3,9 @@ import { addons, types, useChannel } from '@storybook/manager-api';
 import React, { useState } from 'react';
 import { JSONTree } from 'react-json-tree';
 import { ADDON_ID, TAB_ID } from './types.js';
+import type { MockInstance } from '@storybook/test';
 import type { Addon_RenderOptions } from '@storybook/types';
-import type { MockInstance } from 'jest-mock';
+
 const theme = {
   scheme: 'custom',
   base00: '#ffffff',
@@ -26,9 +27,7 @@ const theme = {
 };
 
 const Panel = () => {
-  const [mocks, setMocks] = useState<
-    [string, MockInstance<unknown, unknown[]>['mock']][] | undefined
-  >(undefined);
+  const [mocks, setMocks] = useState<[string, MockInstance['mock']][] | undefined>(undefined);
   useChannel({
     [ADDON_ID]: (mocks) => {
       setMocks(mocks);
