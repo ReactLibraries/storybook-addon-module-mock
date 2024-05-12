@@ -10,15 +10,6 @@ Provides module mocking functionality like `jest.mock` on Storybook.
 Added 'storybook-addon-module-mock' to Storybook addons.  
 Only works if Webpack is used in the Builder.
 
-Please place the following file in the project root so that 'babel' is used.  
-If you do not do this, @storybook/nextjs will select 'swc' and it will not work.
-
-- .babelrc
-
-```json
-{}
-```
-
 - Sample code  
   https://github.com/SoraKumo001/storybook-module-mock
 
@@ -76,9 +67,6 @@ const config: StorybookConfig = {
     },
     'storybook-addon-module-mock',
   ],
-  features: {
-    storyStoreV7: true,
-  },
   typescript: {
     reactDocgen: 'react-docgen',
   },
