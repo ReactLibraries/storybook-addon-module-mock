@@ -7,8 +7,8 @@ const getDisplayValue = (element: Element) =>
   element instanceof HTMLInputElement
     ? element.value
     : element instanceof HTMLSelectElement
-    ? element.options[element.selectedIndex].value
-    : undefined;
+      ? element.options[element.selectedIndex].value
+      : undefined;
 
 const getRole = (node: Element) => {
   const tag = node.tagName.toLowerCase();
@@ -82,7 +82,7 @@ export const NodeInfoDecorator: Decorator = (Story) => {
             placeholder: element.getAttribute('placeholder'),
             text: element.textContent?.trim(),
           };
-        item && emit(ADDON_ID, item);
+        if (item) emit(ADDON_ID, item);
       }
     };
     document.addEventListener('mousemove', handleMouseMove);
