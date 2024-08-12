@@ -2,13 +2,19 @@
 
 Provides module mocking functionality like `jest.mock` on Storybook.
 
+Added 'storybook-addon-module-mock' to Storybook addons.  
+Only works if Webpack is used in the Builder.
+
+If you use Vite for your Builder, use this package.
+
+https://www.npmjs.com/package/storybook-addon-vite-mock
+
+## Screenshot
+
 ![](https://raw.githubusercontent.com/ReactLibraries/storybook-addon-module-mock/master/document/image/image01.png)  
 ![](https://raw.githubusercontent.com/ReactLibraries/storybook-addon-module-mock/master/document/image/image02.png)
 
 ## usage
-
-Added 'storybook-addon-module-mock' to Storybook addons.  
-Only works if Webpack is used in the Builder.
 
 - Sample code  
   https://github.com/SoraKumo001/storybook-module-mock
