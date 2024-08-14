@@ -40,7 +40,7 @@ If include is omitted, all modules are covered.
     {
       name: 'storybook-addon-module-mock',
       options: {
-        include: [/message/,"**/action.*"], // RegExp or glob pattern
+        include: ["**/action.*"], // glob pattern
         exclude: ["**/node_modules/**"],
       }
     }
