@@ -1,12 +1,11 @@
 # storybook-addon-module-mock
 
-Provides module mocking functionality like `jest.mock` on Storybook.
+Provides module mocking functionality like `jest.mock` on Storybook@8.
 
 Added 'storybook-addon-module-mock' to Storybook addons.  
 Only works if Webpack is used in the Builder.
 
-If you use Vite for your Builder, use this package.
-
+If you use Vite for your Builder, use this package.  
 https://www.npmjs.com/package/storybook-addon-vite-mock
 
 ## Screenshot
@@ -60,6 +59,11 @@ const config: StorybookConfig = {
     options: {},
   },
   stories: ['../src/**/*.stories.@(tsx)'],
+  build: {
+    test: {
+      disabledAddons: ['@storybook/addon-docs', '@storybook/addon-essentials/docs'],
+    },
+  },
   addons: [
     '@storybook/addon-essentials',
     '@storybook/addon-interactions',
@@ -71,11 +75,13 @@ const config: StorybookConfig = {
         },
       },
     },
-    'storybook-addon-module-mock',
+    {
+      name: 'storybook-addon-module-mock',
+      options: {
+        exclude: ['**/node_modules/@mui/**'],
+      },
+    },
   ],
-  typescript: {
-    reactDocgen: 'react-docgen',
-  },
 };
 
 export default config;
@@ -114,32 +120,36 @@ export const MockTest: FC<Props> = ({}) => {
 The `mockRestore()` is automatically performed after the Story display is finished.
 
 ```tsx
-import { expect } from '@storybook/jest';
-import { userEvent, waitFor, within } from '@storybook/testing-library';
-import { createMock, getMock } from 'storybook-addon-module-mock';
-import { ComponentMeta, ComponentStoryObj } from '@storybook/react';
+import { Meta, StoryObj } from '@storybook/react';
+import { expect, userEvent, waitFor, within } from '@storybook/test';
+import React, { DependencyList } from 'react';
+import { createMock, getMock, getOriginal } from 'storybook-addon-module-mock';
 import { MockTest } from './MockTest';
-import React from 'react';
 
-const meta: ComponentMeta<typeof MockTest> = {
-  title: 'Components/MockTest',
+const meta: Meta<typeof MockTest> = {
+  tags: ['autodocs'],
   component: MockTest,
 };
 export default meta;
 
-export const Primary: ComponentStoryObj<typeof MockTest> = {
+export const Primary: StoryObj<typeof MockTest> = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     expect(canvas.getByText('Before')).toBeInTheDocument();
   },
 };
 
-export const Mock: ComponentStoryObj<typeof MockTest> = {
+export const Mock: StoryObj<typeof MockTest> = {
   parameters: {
     moduleMock: {
       mock: () => {
         const mock = createMock(React, 'useMemo');
-        mock.mockReturnValue('After');
+        mock.mockImplementation((fn: () => unknown, deps: DependencyList) => {
+          // Call the original useMemo
+          const value = getOriginal(mock)(fn, deps);
+          // Change the return value under certain conditions
+          return value === 'Before' ? 'After' : value;
+        });
         return [mock];
       },
     },
@@ -152,11 +162,13 @@ export const Mock: ComponentStoryObj<typeof MockTest> = {
   },
 };
 
-export const Action: ComponentStoryObj<typeof MockTest> = {
+export const Action: StoryObj<typeof MockTest> = {
   parameters: {
     moduleMock: {
       mock: () => {
+        const useMemo = React.useMemo;
         const mock = createMock(React, 'useMemo');
+        mock.mockImplementation(useMemo);
         return [mock];
       },
     },
@@ -164,7 +176,10 @@ export const Action: ComponentStoryObj<typeof MockTest> = {
   play: async ({ canvasElement, parameters }) => {
     const canvas = within(canvasElement);
     const mock = getMock(parameters, React, 'useMemo');
-    mock.mockReturnValue('Action');
+    mock.mockImplementation((fn: () => unknown, deps: DependencyList) => {
+      const value = getOriginal(mock)(fn, deps);
+      return value === 'Before' ? 'Action' : value;
+    });
     userEvent.click(await canvas.findByRole('button'));
     await waitFor(() => {
       expect(canvas.getByText('Action')).toBeInTheDocument();
@@ -210,27 +225,26 @@ export const LibHook: FC<Props> = ({}) => {
 #### LibHook.stories.tsx
 
 ```tsx
-import { expect } from '@storybook/jest';
-import { userEvent, waitFor, within } from '@storybook/testing-library';
-import { ComponentMeta, ComponentStoryObj } from '@storybook/react';
-import { LibHook } from './LibHook';
+import { Meta, StoryObj } from '@storybook/react';
+import { expect, userEvent, waitFor, within } from '@storybook/test';
 import { createMock, getMock } from 'storybook-addon-module-mock';
+import { LibHook } from './LibHook';
 import * as message from './message';
 
-const meta: ComponentMeta<typeof LibHook> = {
-  title: 'Components/LibHook',
+const meta: Meta<typeof LibHook> = {
+  tags: ['autodocs'],
   component: LibHook,
 };
 export default meta;
 
-export const Primary: ComponentStoryObj<typeof LibHook> = {
+export const Primary: StoryObj<typeof LibHook> = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     expect(canvas.getByText('Before')).toBeInTheDocument();
   },
 };
 
-export const Mock: ComponentStoryObj<typeof LibHook> = {
+export const Mock: StoryObj<typeof LibHook> = {
   parameters: {
     moduleMock: {
       mock: () => {
@@ -244,11 +258,12 @@ export const Mock: ComponentStoryObj<typeof LibHook> = {
     const canvas = within(canvasElement);
     expect(canvas.getByText('After')).toBeInTheDocument();
     const mock = getMock(parameters, message, 'getMessage');
+    console.log(mock);
     expect(mock).toBeCalled();
   },
 };
 
-export const Action: ComponentStoryObj<typeof LibHook> = {
+export const Action: StoryObj<typeof LibHook> = {
   parameters: {
     moduleMock: {
       mock: () => {
@@ -298,14 +313,14 @@ export const MockTest: FC<Props> = ({}) => {
 #### MockTest.stories.tsx
 
 ```tsx
-import { expect } from '@storybook/jest';
 import { Meta, StoryObj } from '@storybook/react';
-import { userEvent, waitFor, within } from '@storybook/testing-library';
-import React from 'react';
+import { expect, userEvent, waitFor, within } from '@storybook/test';
+import React, { DependencyList } from 'react';
 import { createMock, getMock, getOriginal } from 'storybook-addon-module-mock';
 import { MockTest } from './MockTest';
 
 const meta: Meta<typeof MockTest> = {
+  tags: ['autodocs'],
   component: MockTest,
 };
 export default meta;
@@ -322,7 +337,7 @@ export const Mock: StoryObj<typeof MockTest> = {
     moduleMock: {
       mock: () => {
         const mock = createMock(React, 'useMemo');
-        mock.mockImplementation((fn: () => unknown, deps: unknown[]) => {
+        mock.mockImplementation((fn: () => unknown, deps: DependencyList) => {
           // Call the original useMemo
           const value = getOriginal(mock)(fn, deps);
           // Change the return value under certain conditions
@@ -354,7 +369,7 @@ export const Action: StoryObj<typeof MockTest> = {
   play: async ({ canvasElement, parameters }) => {
     const canvas = within(canvasElement);
     const mock = getMock(parameters, React, 'useMemo');
-    mock.mockImplementation((fn: () => unknown, deps: unknown[]) => {
+    mock.mockImplementation((fn: () => unknown, deps: DependencyList) => {
       const value = getOriginal(mock)(fn, deps);
       return value === 'Before' ? 'Action' : value;
     });
@@ -391,40 +406,41 @@ export const ReRenderArgs: FC<Props> = ({ value }) => {
 #### ReRenderArgs.stories.tsx
 
 ```tsx
-import { expect } from '@storybook/jest';
 import { Meta, StoryObj } from '@storybook/react';
-import { waitFor, within } from '@storybook/testing-library';
-import { render } from 'storybook-addon-module-mock';
-import { ReRenderArgs } from './ReRenderArgs';
+import { expect, waitFor, within } from '@storybook/test';
+import { createMock, getMock, render } from 'storybook-addon-module-mock';
+import * as message from './message';
+import { ReRender } from './ReRender';
 
-const meta: Meta<typeof ReRenderArgs> = {
-  component: ReRenderArgs,
-  args: { value: 'Test' },
+const meta: Meta<typeof ReRender> = {
+  tags: ['autodocs'],
+  component: ReRender,
 };
 export default meta;
 
-export const Primary: StoryObj<typeof ReRenderArgs> = {
-  args: {},
+export const Primary: StoryObj<typeof ReRender> = {};
+
+export const ReRenderTest: StoryObj<typeof ReRender> = {
+  parameters: {
+    moduleMock: {
+      mock: () => {
+        const mock = createMock(message, 'getMessage');
+        return [mock];
+      },
+    },
+  },
   play: async ({ canvasElement, parameters }) => {
     const canvas = within(canvasElement);
-    expect(canvas.getByText('Test')).toBeInTheDocument();
-
-    // Re-render with new props
-    render(parameters, { value: 'Test2' });
+    const mock = getMock(parameters, message, 'getMessage');
+    mock.mockReturnValue('Test1');
+    render(parameters);
+    await waitFor(() => {
+      expect(canvas.getByText('Test1')).toBeInTheDocument();
+    });
+    mock.mockReturnValue('Test2');
+    render(parameters);
     await waitFor(() => {
       expect(canvas.getByText('Test2')).toBeInTheDocument();
-    });
-
-    // Re-render with new props
-    render(parameters, { value: 'Test3' });
-    await waitFor(() => {
-      expect(canvas.getByText('Test3')).toBeInTheDocument();
-    });
-
-    // Re-render with new props
-    render(parameters, { value: 'Test4' });
-    await waitFor(() => {
-      expect(canvas.getByText('Test4')).toBeInTheDocument();
     });
   },
 };

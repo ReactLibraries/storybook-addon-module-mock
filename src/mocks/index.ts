@@ -24,15 +24,14 @@ const hookFn = <T, Y extends unknown[]>(hook: (fn: Mock<Y, T>) => void) => {
 export const createMock: {
   <
     T extends { [key in N]: (...args: any[]) => unknown },
-    N extends keyof T = 'default' extends keyof T ? keyof T : never
+    N extends keyof T = 'default' extends keyof T ? keyof T : never,
   >(
     module: T,
     name?: N
   ): ModuleMock<T, N>;
-  <T extends { [key in 'default']: (...args: any[]) => unknown }>(module: T): ModuleMock<
-    T,
-    'default'
-  >;
+  <T extends { [key in 'default']: (...args: any[]) => unknown }>(
+    module: T
+  ): ModuleMock<T, 'default'>;
 } = <T extends { [key in N]: (...args: any[]) => unknown }, N extends keyof T>(
   module: T,
   name: N = 'default' as N
@@ -52,13 +51,6 @@ export const createMock: {
     fn.mockRestore = () => {
       module[name] = f;
     };
-  } else if ('$$mock$$' in module) {
-    const mock = (module as unknown as { $$mock$$: (name: N, value: unknown) => unknown }).$$mock$$;
-    const f = mock(name, fn);
-    original = f;
-    fn.mockRestore = () => {
-      mock(name, f);
-    };
   } else {
     throw new Error('Failed to write mock');
   }
@@ -71,7 +63,7 @@ export const createMock: {
 
 export const getOriginal = <
   T extends { [key in N]: (...args: any[]) => unknown },
-  N extends keyof T = 'default' extends keyof T ? keyof T : never
+  N extends keyof T = 'default' extends keyof T ? keyof T : never,
 >(
   mock: ModuleMock<T, N>
 ): T[N] extends never ? any : T[N] => {
