@@ -8,7 +8,7 @@ const hookFn = <T, Y extends unknown[]>(hook: (fn: Mock<Y, T>) => void) => {
   mocks.delete(fnSrc);
   const func = Object.assign((...args: any[]): any => {
     const result = fnSrc(...(args as any));
-    hook(fnSrc);
+    hook(fnSrc as never);
     return result;
   }, fnSrc);
   func.bind(fnSrc);
@@ -58,7 +58,7 @@ export const createMock: {
     __module: { module, name },
     __name: `[${moduleName ?? 'unknown'}]:${String(funcName)}`,
     __original: original as T[N],
-  }) as ModuleMock<T, N>;
+  }) as unknown as ModuleMock<T, N>;
 };
 
 export const getOriginal = <
