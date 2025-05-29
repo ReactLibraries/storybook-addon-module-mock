@@ -8,6 +8,11 @@ Only works if Webpack is used in the Builder.
 If you use Vite for your Builder, use this package.  
 https://www.npmjs.com/package/storybook-addon-vite-mock
 
+## Version Compatibility
+
+- **Storybook 9+**: Use version `2.0.0` or higher
+- **Storybook 8 and earlier**: Use version `1.3.5`
+
 ## Screenshot
 
 ![](https://raw.githubusercontent.com/ReactLibraries/storybook-addon-module-mock/master/document/image/image01.png)  
@@ -121,7 +126,7 @@ The `mockRestore()` is automatically performed after the Story display is finish
 
 ```tsx
 import { Meta, StoryObj } from '@storybook/react';
-import { expect, userEvent, waitFor, within } from '@storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import React, { DependencyList } from 'react';
 import { createMock, getMock, getOriginal } from 'storybook-addon-module-mock';
 import { MockTest } from './MockTest';
@@ -226,7 +231,7 @@ export const LibHook: FC<Props> = ({}) => {
 
 ```tsx
 import { Meta, StoryObj } from '@storybook/react';
-import { expect, userEvent, waitFor, within } from '@storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { createMock, getMock } from 'storybook-addon-module-mock';
 import { LibHook } from './LibHook';
 import * as message from './message';
@@ -314,7 +319,7 @@ export const MockTest: FC<Props> = ({}) => {
 
 ```tsx
 import { Meta, StoryObj } from '@storybook/react';
-import { expect, userEvent, waitFor, within } from '@storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import React, { DependencyList } from 'react';
 import { createMock, getMock, getOriginal } from 'storybook-addon-module-mock';
 import { MockTest } from './MockTest';
@@ -407,7 +412,7 @@ export const ReRenderArgs: FC<Props> = ({ value }) => {
 
 ```tsx
 import { Meta, StoryObj } from '@storybook/react';
-import { expect, waitFor, within } from '@storybook/test';
+import { expect, waitFor, within } from 'storybook/test';
 import { createMock, getMock, render } from 'storybook-addon-module-mock';
 import * as message from './message';
 import { ReRender } from './ReRender';

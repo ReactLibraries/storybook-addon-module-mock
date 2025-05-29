@@ -1,4 +1,4 @@
-import { Options } from '@storybook/types';
+import { Options } from 'storybook/internal/types';
 import { ImportWriterPlugin } from './plugins/webpack-import-writer.js';
 import { AddonOptions } from './types.js';
 import type { Configuration } from 'webpack';

@@ -1,4 +1,4 @@
-import type { Mock } from '@storybook/test';
+import type { Mock } from 'storybook/test';
 
 export const ADDON_ID = 'storybook-addon-module-mock';
 export const TAB_ID = `${ADDON_ID}/tab`;
@@ -13,7 +13,7 @@ export type ModuleMock<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   T extends { [key: string | number]: (...args: any[]) => unknown },
   N extends keyof T
-> = Mock<Parameters<T[N]>, ReturnType<T[N]>> & ModuleType<T, N>;
+> = Mock<T[N]> & ModuleType<T, N>;
 export type moduleMockParameter = {
   moduleMock: {
     mock?: () => Mocks;

@@ -1,6 +1,6 @@
-import { useChannel, useEffect } from '@storybook/preview-api';
 import { Decorator } from '@storybook/react';
 import React from 'react';
+import { useChannel, useEffect } from 'storybook/preview-api';
 import { ADDON_ID } from './types.js';
 
 const getDisplayValue = (element: Element) =>

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Mock, fn, mocks } from '@storybook/test';
+import { Mock, fn, mocks } from 'storybook/test';
 import { ModuleMock, moduleMockParameter } from '../ModuleMock/types.js';
 import type { Parameters as P } from '@storybook/react';
 
-const hookFn = <T, Y extends unknown[]>(hook: (fn: Mock<Y, T>) => void) => {
+const hookFn = <T, Y extends unknown[]>(hook: (fn: Mock<(...args: Y) => T>) => void) => {
   const fnSrc = fn();
   mocks.delete(fnSrc);
   const func = Object.assign((...args: any[]): any => {
