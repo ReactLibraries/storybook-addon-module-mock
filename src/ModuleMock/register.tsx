@@ -1,20 +1,20 @@
-import { TabWrapper } from '@storybook/components';
-import { addons, types, useChannel } from '@storybook/manager-api';
 import React, { useState } from 'react';
 import { JSONTree } from 'react-json-tree';
+import { TabWrapper } from 'storybook/internal/components';
+import { addons, types, useChannel } from 'storybook/manager-api';
 import { ADDON_ID, TAB_ID } from './types.js';
-import type { MockInstance } from '@storybook/test';
-import type { Addon_RenderOptions } from '@storybook/types';
+import type { Addon_RenderOptions } from 'storybook/internal/types';
+import type { MockInstance } from 'storybook/test';
 
 const theme = {
   scheme: 'custom',
   base00: '#ffffff',
-  base01: '#aeb8c4', // keyの色
-  base02: '#9b9b9b', // テキスト色
-  base03: '#9b9a9a', // 配列/オブジェクトの区切り線の色
+  base01: '#aeb8c4',
+  base02: '#9b9b9b',
+  base03: '#9b9a9a',
   base04: '#909090',
-  base05: '#1e1e1e', // テキストの色
-  base06: '#efefef', // 配列/オブジェクトの背景色
+  base05: '#1e1e1e',
+  base06: '#efefef',
   base07: '#9e9e9e',
   base08: '#f44336',
   base09: '#ff9800',

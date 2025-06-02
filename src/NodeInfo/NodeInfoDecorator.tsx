@@ -1,14 +1,14 @@
-import { useChannel, useEffect } from '@storybook/preview-api';
 import { Decorator } from '@storybook/react';
 import React from 'react';
+import { useChannel, useEffect } from 'storybook/preview-api';
 import { ADDON_ID } from './types.js';
 
 const getDisplayValue = (element: Element) =>
   element instanceof HTMLInputElement
     ? element.value
     : element instanceof HTMLSelectElement
-      ? element.options[element.selectedIndex].value
-      : undefined;
+    ? element.options[element.selectedIndex].value
+    : undefined;
 
 const getRole = (node: Element) => {
   const tag = node.tagName.toLowerCase();

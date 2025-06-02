@@ -1,6 +1,6 @@
 # storybook-addon-module-mock
 
-Provides module mocking functionality like `jest.mock` on Storybook@8.
+Provides module mocking functionality like `jest.mock` on Storybook@9.
 
 Added 'storybook-addon-module-mock' to Storybook addons.  
 Only works if Webpack is used in the Builder.

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Mock, fn, mocks } from '@storybook/test';
+import { Mock, fn, mocks } from 'storybook/test';
 import { ModuleMock, moduleMockParameter } from '../ModuleMock/types.js';
 import type { Parameters as P } from '@storybook/react';
 
-const hookFn = <T, Y extends unknown[]>(hook: (fn: Mock<Y, T>) => void) => {
+const hookFn = <T extends (...args: any[]) => any>(hook: (fn: Mock<T>) => void) => {
   const fnSrc = fn();
   mocks.delete(fnSrc);
   const func = Object.assign((...args: any[]): any => {
@@ -24,14 +24,15 @@ const hookFn = <T, Y extends unknown[]>(hook: (fn: Mock<Y, T>) => void) => {
 export const createMock: {
   <
     T extends { [key in N]: (...args: any[]) => unknown },
-    N extends keyof T = 'default' extends keyof T ? keyof T : never,
+    N extends keyof T = 'default' extends keyof T ? keyof T : never
   >(
     module: T,
     name?: N
   ): ModuleMock<T, N>;
-  <T extends { [key in 'default']: (...args: any[]) => unknown }>(
-    module: T
-  ): ModuleMock<T, 'default'>;
+  <T extends { [key in 'default']: (...args: any[]) => unknown }>(module: T): ModuleMock<
+    T,
+    'default'
+  >;
 } = <T extends { [key in N]: (...args: any[]) => unknown }, N extends keyof T>(
   module: T,
   name: N = 'default' as N
@@ -39,7 +40,7 @@ export const createMock: {
   const moduleName = module.constructor.prototype.__moduleId__;
   const funcName = name;
 
-  const fn = hookFn<ReturnType<T[N]>, Parameters<T[N]>>(() => {
+  const fn = hookFn<T[N]>(() => {
     (fn as ModuleMock<T, N>).__module.event?.();
   });
   const descriptor = Object.getOwnPropertyDescriptor(module, name);
@@ -63,7 +64,7 @@ export const createMock: {
 
 export const getOriginal = <
   T extends { [key in N]: (...args: any[]) => unknown },
-  N extends keyof T = 'default' extends keyof T ? keyof T : never,
+  N extends keyof T = 'default' extends keyof T ? keyof T : never
 >(
   mock: ModuleMock<T, N>
 ): T[N] extends never ? any : T[N] => {
