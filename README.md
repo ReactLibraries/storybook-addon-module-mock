@@ -1,14 +1,14 @@
 # storybook-addon-module-mock
 
-![](https://img.shields.io/npm/l/storybook-addon-module-mock)
-![](https://img.shields.io/npm/v/storybook-addon-module-mock)
-![](https://img.shields.io/npm/dw/storybook-addon-module-mock)
+[![](https://img.shields.io/npm/l/storybook-addon-module-mock)](https://www.npmjs.com/package/storybook-addon-module-mock)
+[![](https://img.shields.io/npm/v/storybook-addon-module-mock)](https://www.npmjs.com/package/storybook-addon-module-mock)
+[![](https://img.shields.io/npm/dw/storybook-addon-module-mock)](https://www.npmjs.com/package/storybook-addon-module-mock)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/ReactLibraries/storybook-addon-module-mock)
 
 Provides module mocking functionality like `jest.mock` on Storybook@9.
 
 Added 'storybook-addon-module-mock' to Storybook addons.  
-Only works if Webpack is used in the Builder.
+Only works if webpack is used in the Builder.
 
 If you use Vite for your Builder, use this package.  
 https://www.npmjs.com/package/storybook-addon-vite-mock
@@ -25,17 +25,10 @@ https://www.npmjs.com/package/storybook-addon-vite-mock
 
 ## Regarding how to interrupt a mock
 
-Interruptions vary depending on the Storybook mode.
-
-- storybook dev
-  - Make `module.exports` writable using Webpack functionality
-- storybook build
-  - Insert code to rewrite `module.exports` using Babel functionality
+Interrupt webpack's `module.exports` to allow insertion of mock.  
+In doing so, disable `storybook build` optimization.
 
 ## Addon options
-
-Include and exclude are enabled for `storybook build` where Babel is used.
-Not used in `storybook dev`.
 
 If include is omitted, all modules are covered.
 
