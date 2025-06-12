@@ -1,5 +1,10 @@
 # storybook-addon-module-mock
 
+![](https://img.shields.io/npm/l/storybook-addon-module-mock)
+![](https://img.shields.io/npm/v/storybook-addon-module-mock)
+![](https://img.shields.io/npm/dw/storybook-addon-module-mock)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/ReactLibraries/storybook-addon-module-mock)
+
 Provides module mocking functionality like `jest.mock` on Storybook@9.
 
 Added 'storybook-addon-module-mock' to Storybook addons.  
