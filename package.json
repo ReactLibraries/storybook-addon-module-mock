@@ -1,6 +1,6 @@
 {
   "name": "storybook-addon-module-mock",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "main": "./dist/cjs/index.js",
   "types": "./dist/cjs/index.d.ts",
   "exports": {
@@ -26,22 +26,22 @@
     "cp": "yarn build && cpy dist ../../../test/storybook-module-mock/node_modules/storybook-addon-module-mock"
   },
   "dependencies": {
-    "@types/node": "24.0.1",
+    "@types/node": "24.0.3",
     "minimatch": "^10.0.3",
     "react-json-tree": "^0.20.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.28.0",
-    "@storybook/react": "^9.0.9",
+    "@eslint/js": "^9.29.0",
+    "@storybook/react": "^9.0.11",
     "@types/react": "^19.1.8",
     "cpy-cli": "^5.0.0",
-    "eslint": "^9.28.0",
+    "eslint": "^9.29.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-import": "^2.31.0",
     "react": "^19.1.0",
-    "storybook": "^9.0.9",
+    "storybook": "^9.0.11",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.34.0",
+    "typescript-eslint": "^8.34.1",
     "webpack": "^5.99.9"
   },
   "resolutions": {
