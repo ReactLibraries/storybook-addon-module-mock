@@ -5,7 +5,7 @@ import type { Configuration } from 'webpack';
 
 export const managerEntries = (entry: string[] = []): string[] => [
   ...entry,
-  require.resolve('./manager'),
+  import.meta.resolve('./manager')
 ];
 
 export async function webpack(config: Configuration, options: Options & AddonOptions) {
