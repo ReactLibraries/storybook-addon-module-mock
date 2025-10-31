@@ -1,6 +1,6 @@
 {
   "name": "storybook-addon-module-mock",
-  "version": "1.4.4",
+  "version": "1.5.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -46,5 +46,8 @@
     "import",
     "interactions"
   ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "author": "SoraKumo <info@croud.jp>"
 }
