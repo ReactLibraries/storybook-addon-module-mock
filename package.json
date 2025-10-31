@@ -29,6 +29,9 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.2",
     "webpack": "^5.102.1"
+  },  
+  "peerDependencies": {
+    "storybook": "^10.0.0"
   },
   "resolutions": {
     "strip-ansi": "6.0.1"
