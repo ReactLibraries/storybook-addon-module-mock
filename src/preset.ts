@@ -2,10 +2,11 @@ import { Options } from 'storybook/internal/types';
 import { ImportWriterPlugin } from './plugins/webpack-import-writer.js';
 import { AddonOptions } from './types.js';
 import type { Configuration } from 'webpack';
+import { fileURLToPath } from 'url';
 
 export const managerEntries = (entry: string[] = []): string[] => [
   ...entry,
-  require.resolve('./manager'),
+  fileURLToPath(import.meta.resolve('./manager.js',  import.meta.url))
 ];
 
 export async function webpack(config: Configuration, options: Options & AddonOptions) {

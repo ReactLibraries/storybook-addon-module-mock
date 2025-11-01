@@ -1,5 +1,5 @@
 import { Compiler } from 'webpack';
-import { AddonOptions } from '../types';
+import { AddonOptions } from '../types.js';
 
 export class ImportWriterPlugin {
   constructor(private options?: AddonOptions) {}
