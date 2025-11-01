@@ -1,6 +1,6 @@
 {
   "name": "storybook-addon-module-mock",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -12,16 +12,22 @@
     "lint:fix": "eslint --fix ./src",
     "cp": "yarn build && cpy dist ../../../test/storybook-module-mock/node_modules/storybook-addon-module-mock"
   },
+  "exports": {
+    ".": "./dist/index.js",
+    "./preset": "./dist/preset.js",
+    "./preview": "./dist/preview.js"
+  },
   "dependencies": {
-    "@types/node": "24.1.0",
+    "@types/node": "24.9.2",
     "minimatch": "^10.1.1",
     "react-json-tree": "^0.20.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.31.0",
+    "@eslint/js": "^9.39.0",
     "@storybook/react": "^10.0.2",
     "@types/react": "^19.2.2",
-    "eslint": "^9.38.0",
+    "cpy-cli": "6.0.0",
+    "eslint": "^9.39.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
     "react": "^19.2.0",
@@ -29,7 +35,7 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.2",
     "webpack": "^5.102.1"
-  },  
+  },
   "peerDependencies": {
     "storybook": "^10.0.0"
   },
