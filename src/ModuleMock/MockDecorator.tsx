@@ -1,13 +1,17 @@
 import { Decorator } from '@storybook/react';
 import React from 'react';
 import { STORY_RENDER_PHASE_CHANGED } from 'storybook/internal/core-events';
-import { useChannel, useEffect, useRef, useState } from 'storybook/preview-api';
+import { useChannel, useRef, useState } from 'storybook/preview-api';
 import { ADDON_ID, moduleMockParameter } from './types.js';
 
 export const MockDecorator: Decorator = (Story, context) => {
   const { parameters, name, id } = context;
   const emit = useChannel({
     [STORY_RENDER_PHASE_CHANGED]: ({ newPhase, storyId }) => {
+      if (storyId !== id && moduleMock?.mocks) {
+        moduleMock.mocks.forEach((mock) => mock.mockRestore());
+        moduleMock.mocks = undefined;
+      }
       if (newPhase === 'completed' && storyId === id) {
         if (moduleMock.mocks) {
           moduleMock.mocks.forEach((mock) => mock.mockClear());
@@ -38,14 +42,6 @@ export const MockDecorator: Decorator = (Story, context) => {
       emit(ADDON_ID, []);
     }
   }
-  useEffect(() => {
-    return () => {
-      if (moduleMock.mocks) {
-        moduleMock.mocks.forEach((mock) => mock.mockRestore());
-        moduleMock.mocks = undefined;
-      }
-    };
-  }, [id]);
   if (name === '$$mock$$') return <></>;
   return Story(args ? { args } : undefined);
 };
