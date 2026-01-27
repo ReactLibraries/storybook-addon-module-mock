@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Mock, fn, mocks } from 'storybook/test';
-import { ModuleMock, moduleMockParameter } from '../ModuleMock/types.js';
+import { ModuleMock, moduleMockParameter } from './types.js';
 import type { Parameters as P } from '@storybook/react';
 
 const hookFn = <T extends (...args: any[]) => any>(hook: (fn: Mock<T>) => void) => {

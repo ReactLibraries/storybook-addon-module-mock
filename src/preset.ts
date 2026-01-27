@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'url';
 import { Options } from 'storybook/internal/types';
-import { ImportWriterPlugin } from './plugins/webpack-import-writer.js';
+import { ImportWriterPlugin } from './webpack/ImportWriterPlugin.js';
 import { AddonOptions } from './types.js';
 import type { Configuration } from 'webpack';
 
