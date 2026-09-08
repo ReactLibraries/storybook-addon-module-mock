@@ -9,11 +9,13 @@ export const managerEntries = (entry: string[] = []): string[] => [
   fileURLToPath(import.meta.resolve('./manager.js', import.meta.url)),
 ];
 
-export async function webpack(config: Configuration, options: Options & AddonOptions) {
+export async function webpack(config: Configuration, options: Options & AddonOptions): Promise<Configuration> {
+  // Disable module concatenation so that individual module exports can be intercepted by ImportWriterPlugin
   config.optimization = {
     ...config.optimization,
     concatenateModules: false,
   };
+
   const { include, exclude } = options;
   config.plugins = [...(config.plugins ?? []), new ImportWriterPlugin({ include, exclude })];
   return config;
