@@ -22,6 +22,32 @@ https://www.npmjs.com/package/storybook-addon-vite-mock
 
 - Sample code  
   https://github.com/SoraKumo001/storybook-module-mock
+  (Included in `examples/storybook-module-mock`)
+
+## Monorepo Development
+
+```bash
+# Install all dependencies
+pnpm install
+
+# Build addon package
+pnpm build
+
+# Start addon watch build & Storybook dev server simultaneously
+pnpm dev
+
+# Run Storybook dev server
+pnpm storybook
+
+# Build Storybook static output
+pnpm storybook:build
+
+# Run Storybook test-runner
+pnpm test
+
+# Run ESLint across packages
+pnpm lint
+```
 
 ## Regarding how to interrupt a mock
 
