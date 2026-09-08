@@ -1,3 +1,3 @@
 # storybook-module-mock
-
-https://sorakumo001.github.io/storybook-module-mock/
+ 
+https://reactlibraries.github.io/storybook-addon-module-mock/

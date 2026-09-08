@@ -1,0 +1,94 @@
+name: Release and Publish to npm
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'packages/storybook-addon-module-mock/package.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  id-token: write
+
+concurrency:
+  group: 'release'
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Extract package version
+        id: pkg_version
+        run: |
+          VERSION=$(node -p "require('./packages/storybook-addon-module-mock/package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Package version is $VERSION"
+
+      - name: Check if Git tag already exists
+        id: check_tag
+        run: |
+          TAG_NAME="v${{ steps.pkg_version.outputs.version }}"
+          if git rev-parse "$TAG_NAME" >/dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "Tag $TAG_NAME already exists. Skipping release."
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "Tag $TAG_NAME does not exist. Proceeding with release."
+          fi
+
+      - name: Install pnpm
+        if: steps.check_tag.outputs.exists == 'false'
+        uses: pnpm/action-setup@v6
+        with:
+          version: 11
+
+      - name: Setup Node.js
+        if: steps.check_tag.outputs.exists == 'false'
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        if: steps.check_tag.outputs.exists == 'false'
+        run: pnpm install --frozen-lockfile --prefer-offline
+
+      - name: Build addon package
+        if: steps.check_tag.outputs.exists == 'false'
+        run: pnpm build
+
+      - name: Create and push Git tag
+        if: steps.check_tag.outputs.exists == 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG_NAME="v${{ steps.pkg_version.outputs.version }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "$TAG_NAME" -m "Release $TAG_NAME"
+          git push origin "$TAG_NAME"
+
+      - name: Create GitHub Release
+        if: steps.check_tag.outputs.exists == 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG_NAME="v${{ steps.pkg_version.outputs.version }}"
+          gh release create "$TAG_NAME" --title "$TAG_NAME" --generate-notes
+
+      - name: Publish to npm (via OIDC / Trusted Publisher)
+        if: steps.check_tag.outputs.exists == 'false'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          cd packages/storybook-addon-module-mock
+          pnpm publish --provenance --access public --no-git-checks

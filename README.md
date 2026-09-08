@@ -20,9 +20,12 @@ https://www.npmjs.com/package/storybook-addon-vite-mock
 
 ## usage
 
-- Sample code  
-  https://github.com/SoraKumo001/storybook-module-mock
-  (Included in `examples/storybook-module-mock`)
+- Sample code (examples)  
+  https://github.com/ReactLibraries/storybook-addon-module-mock/tree/master/examples/storybook-module-mock  
+  ([examples/storybook-module-mock](examples/storybook-module-mock))
+
+- Online Demo  
+  https://reactlibraries.github.io/storybook-addon-module-mock/
 
 ## Monorepo Development
 

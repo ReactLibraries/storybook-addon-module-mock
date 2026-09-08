@@ -6,7 +6,7 @@
   "main": "index.js",
   "author": "SoraKumo <info@croud.jp>",
   "license": "MIT",
-  "repository": "https://github.com/SoraKumo001/storybook-module-mock",
+  "repository": "https://github.com/ReactLibraries/storybook-addon-module-mock",
   "scripts": {
     "test": "pnpm run storybook:build && npm-run-all -p -r storybook:start storybook:test",
     "storybook": "rimraf node_modules/.cache && storybook dev -p 9001",
