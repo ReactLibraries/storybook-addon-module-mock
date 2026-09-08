@@ -12,31 +12,29 @@ const createMockInterceptor = (options?: AddonOptions): string => {
           function escapeRegExp(string) {
             return string.replace(/[.*+?^\${}()|[\\]\\\\]/g, '\\\\$$&');
           }
-          const regexPattern = pattern
+          let regexPattern = pattern
             .split('**')
-            .map(function(part) { return part.split('*').map(escapeRegExp).join('[^/]*'); })
+            .map((part) => part.split('*').map(escapeRegExp).join('[^/]*'))
             .join('.*');
-          return new RegExp('^' + regexPattern + '$$').test(str);
+          let regex = new RegExp('^' + regexPattern + '$$');
+          return regex.test(str);
         }
 
-        const isTarget = function(fileName, opts) {
-          if (!opts) return true;
-          const include = opts.include;
-          const exclude = opts.exclude;
+        const isTarget = (fileName, options) => {
+          if (!options) return true;
+          const { include, exclude } = options;
           if (!fileName) return true;
 
           if (
             include &&
-            include.some(function(i) { return typeof i === 'string' ? minimatch(fileName, i) : new RegExp(i).test(fileName); })
-          ) {
+            include.some((i) => (typeof i === 'string' ? minimatch(fileName, i) : new RegExp(i).test(fileName)))
+          )
             return true;
-          }
           if (
             exclude &&
-            exclude.some(function(i) { return typeof i === 'string' ? minimatch(fileName, i) : new RegExp(i).test(fileName); })
-          ) {
+            exclude.some((i) => (typeof i === 'string' ? minimatch(fileName, i) : new RegExp(i).test(fileName)))
+          )
             return false;
-          }
           return true;
         };
 

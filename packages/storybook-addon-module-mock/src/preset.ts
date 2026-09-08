@@ -14,6 +14,8 @@ export async function webpack(config: Configuration, options: Options & AddonOpt
   config.optimization = {
     ...config.optimization,
     concatenateModules: false,
+    usedExports: false,
+    providedExports: false,
   };
 
   const { include, exclude } = options;
